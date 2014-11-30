@@ -137,7 +137,7 @@ application.directive("drawing", ['SocketIoService', '$window', function (Socket
             element.bind('mouseup', function (event) {
                 drawing = false;
             });
-            
+
             function reset() {
                 element[0].width = element[0].width;
             }
