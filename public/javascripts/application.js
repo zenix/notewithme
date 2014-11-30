@@ -96,22 +96,11 @@ application.directive("drawing", ['SocketIoService', '$window', function (Socket
             ctx.canvas.width = $window.innerWidth;
             ctx.canvas.height = $window.innerHeight;
             SocketIoService.socket().on('draw', function (message) {
-                ctx.beginPath();
-                // line from
-                ctx.moveTo(message.x, message.y);
-                // to
-                ctx.lineTo(message.cX, message.cY);
-                // color
-                ctx.strokeStyle = "#4bf";
-                ctx.closePath();
-                // draw it
-                ctx.stroke();
+                draw(message.x, message.y, message.cX, message.cY);
             });
 
-            // variable that decides if something should be drawn on mousemove
             var drawing = false;
 
-            // the last coordinates before the current move
             var lastX;
             var lastY;
 
@@ -123,17 +112,12 @@ application.directive("drawing", ['SocketIoService', '$window', function (Socket
                     lastX = event.layerX - event.currentTarget.offsetLeft;
                     lastY = event.layerY - event.currentTarget.offsetTop;
                 }
-
-                // begins new line
-                ctx.beginPath();
-
                 drawing = true;
             });
             element.bind('mousemove', function (event) {
                 if (drawing) {
                     var currentX;
                     var currentY;
-                    // get current mouse position
                     if (event.offsetX !== undefined) {
                         currentX = event.offsetX;
                         currentY = event.offsetY;
@@ -142,7 +126,7 @@ application.directive("drawing", ['SocketIoService', '$window', function (Socket
                         currentY = event.layerY - event.currentTarget.offsetTop;
                     }
 
-                    draw(lastX, lastY, currentX, currentY);
+                    drawEmit(lastX, lastY, currentX, currentY);
 
                     // set current coordinates to last one
                     lastX = currentX;
@@ -151,22 +135,24 @@ application.directive("drawing", ['SocketIoService', '$window', function (Socket
 
             });
             element.bind('mouseup', function (event) {
-                // stop drawing
                 drawing = false;
             });
-
-            // canvas reset
+            
             function reset() {
                 element[0].width = element[0].width;
             }
 
-            function draw(lX, lY, cX, cY) {
+            function drawEmit(lX, lY, cX, cY) {
                 var msg = {};
                 msg.x = lX;
                 msg.y = lY;
                 msg.cX = cX;
                 msg.cY = cY;
                 SocketIoService.socket().emit('draw', msg);
+                draw(lX, lY, cX, cY);
+            }
+
+            function draw(lX, lY, cX, cY){
                 ctx.beginPath();
                 // line from
                 ctx.moveTo(lX, lY);
