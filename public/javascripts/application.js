@@ -11,7 +11,9 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
 
 
         canvas.on('mouse:down', function (options) {
-            if (!options.target) {
+            if (!options.target && $scope.textElementSwitch) {
+                $scope.textElementSwitch = false;
+                $scope.$apply();
                 var iText = new fabric.IText('edit',{
                     left: options.e.layerX,
                     top: options.e.layerY,
@@ -69,6 +71,10 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             });
 
         };
+
+        function addTextElementButton(){
+
+        }
 
         function findObjectFromCanvasWith(textId) {
             return canvas.getObjects().filter(function (object) {

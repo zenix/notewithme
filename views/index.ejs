@@ -8,8 +8,16 @@
     <script src="javascripts/application.js"></script>
     <script src="javascripts/services.js"></script>
     <script src="javascripts/directives.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
   </head>
   <body ng-app="notewithme" ng-controller="MainCtrl" >
+  <div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" ng-model="textElementSwitch">
+    <label class="onoffswitch-label" for="myonoffswitch">
+      <span class="onoffswitch-inner"></span>
+      <span class="onoffswitch-switch"></span>
+    </label>
+  </div>
   <canvas id="mainCanvas"></canvas>
 
   </body>
