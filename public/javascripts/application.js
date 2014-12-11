@@ -69,7 +69,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             });
 
             iText.on('scaling', function(event){
-                socket.emit('scaling', {'textId': iText.textId, 'scaleX': iText.scaleX, 'scaleY':iText.scaleY, 'left': iText.left, 'top': iText.top});
+                socket.emit('scaling', {'textId': iText.textId, 'originX': iText.originX, 'originY':iText.originY, 'scaleX': iText.scaleX, 'scaleY':iText.scaleY, 'left': iText.left, 'top': iText.top});
             });
 
         };
@@ -112,6 +112,8 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             object.scaleY = message.scaleY;
             object.top = message.top;
             object.left= message.left;
+            object.originX = message.originX;
+            object.originY = message.originY;
             canvas.renderAll();
         });
 

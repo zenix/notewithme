@@ -18,38 +18,17 @@ io.on('connection', function(socket){
     socket.on('disconnect', function(msg){
         console.log('user disconnected');
     });
+    addListener('addTextElement');
+    addListener('writing');
+    addListener('scaling');
+    addListener('rotating');
+    addListener('moving');
 
-    socket.on('addchar', function(msg){
-        socket.broadcast.emit('addchar', msg);
-    })
-
-    socket.on('draw', function(msg){
-        socket.broadcast.emit('draw', msg);
-    })
-
-    socket.on('removechar', function(msg){
-        socket.broadcast.emit('removechar', msg);
-    })
-
-    socket.on('addTextElement', function(msg){
-        socket.broadcast.emit('addTextElement', msg);
-    });
-
-    socket.on('writing', function(msg){
-        socket.broadcast.emit('writing', msg);
-    });
-
-    socket.on('scaling', function(msg){
-        socket.broadcast.emit('scaling', msg);
-    });
-
-    socket.on('rotating', function(msg){
-        socket.broadcast.emit('rotating', msg);
-    });
-
-    socket.on('moving', function(msg){
-        socket.broadcast.emit('moving', msg);
-    })
+    function addListener(name){
+        socket.on(name, function(msg){
+            socket.broadcast.emit(name, msg);
+        });
+    };
 });
 
 
