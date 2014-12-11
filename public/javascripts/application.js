@@ -8,6 +8,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
         var canvas = new fabric.Canvas('mainCanvas');
         canvas.setWidth($window.innerWidth);
         canvas.setHeight($window.innerHeight);
+        canvas.selection = false;
 
 
         canvas.on('mouse:down', function (options) {
