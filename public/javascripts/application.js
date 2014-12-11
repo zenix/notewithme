@@ -12,8 +12,8 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
 
 
         canvas.on('mouse:down', function (options) {
-            if (!options.target && $scope.textElementSwitch) {
-                $scope.textElementSwitch = false;
+            if (!options.target && $scope.textSelected) {
+                $scope.textSelected = false;
                 $scope.$apply();
                 var iText = new fabric.IText('edit',{
                     left: options.e.layerX,

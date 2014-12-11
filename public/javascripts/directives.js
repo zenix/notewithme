@@ -3,9 +3,12 @@ var notewithmeDirectives = angular.module('notewithmeDirectives', []);
 
 notewithmeDirectives.directive('toggle', ['SocketIoService', '$window', function (SocketIoService, $window) {
     return {
-        restrict: 'E',
+        restrict: 'C',
         link: function(scope, element, attrs){
 
+        },
+        scope: {
+            toggle: '=ngModel'
         },
         templateUrl: 'directives/toggle.html'
     }
