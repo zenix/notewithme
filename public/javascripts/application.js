@@ -15,6 +15,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             if (!options.target && $scope.textSelected) {
                 $scope.textSelected = false;
                 $scope.$apply();
+
                 var iText = new fabric.IText('edit',{
                     left: options.e.layerX,
                     top: options.e.layerY,
@@ -36,6 +37,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                 socket.emit('addTextElement', iTextJson);
                 attachListenersToiText(iText);
                 canvas.add(iText);
+                canvas.calcOffset();
             }
 
         });
@@ -133,6 +135,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
 
                 canvas.renderOnAddRemove = origRenderOnAddRemove;
                 canvas.renderAll();
+                canvas.calcOffset();
             });
         });
     }]);
