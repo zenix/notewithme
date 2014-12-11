@@ -4,11 +4,7 @@ var application = angular.module('notewithme', ['notewithmeServices', 'notewithm
 
 application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
     function ($scope, $window, SocketIoService) {
-        $scope.text = '';
         var socket = SocketIoService.socket();
-        var msg = {};
-        msg.nick = 'zenix';
-        msg.position = '0.0';
         var canvas = new fabric.Canvas('mainCanvas');
         canvas.setWidth($window.innerWidth);
         canvas.setHeight($window.innerHeight);

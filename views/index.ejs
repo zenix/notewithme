@@ -10,13 +10,6 @@
     <script src="javascripts/directives.js"></script>
   </head>
   <body ng-app="notewithme" ng-controller="MainCtrl" >
-    <input eb-caret="textCursorPosition" ng-keypress="keypressed($event.keyCode)" ng-keyup="keypressedBackSpace($event.keyCode)">
-    <div>
-      {{message.nick}}<br/>
-      {{message.position}}<br/>
-      {{text}}
-    </div>
-    <!-- canvas drawing></canvas -->
   <canvas id="mainCanvas"></canvas>
 
   </body>
