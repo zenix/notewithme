@@ -1,6 +1,7 @@
 
 var notewithmeDirectives = angular.module('notewithmeDirectives', []);
 
+
 notewithmeDirectives.directive('ebCaret', function() {
 
     function getPos(element) {

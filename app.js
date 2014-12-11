@@ -30,6 +30,26 @@ io.on('connection', function(socket){
     socket.on('removechar', function(msg){
         socket.broadcast.emit('removechar', msg);
     })
+
+    socket.on('addTextElement', function(msg){
+        socket.broadcast.emit('addTextElement', msg);
+    });
+
+    socket.on('writing', function(msg){
+        socket.broadcast.emit('writing', msg);
+    });
+
+    socket.on('scaling', function(msg){
+        socket.broadcast.emit('scaling', msg);
+    });
+
+    socket.on('rotating', function(msg){
+        socket.broadcast.emit('rotating', msg);
+    });
+
+    socket.on('moving', function(msg){
+        socket.broadcast.emit('moving', msg);
+    })
 });
 
 
