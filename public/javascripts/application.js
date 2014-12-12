@@ -20,7 +20,9 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                     left: options.e.layerX,
                     top: options.e.layerY,
                     backgroundColor: '#FFFFFF',
-                    fill: '#000000'
+                    fill: '#000000',
+                    fontSize: '12',
+                    fontFamily: 'Arial'
                 });
 
                 iText.toObject = (function(toObject) {

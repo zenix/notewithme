@@ -2,11 +2,13 @@
 var notewithmeDirectives = angular.module('notewithmeDirectives', []);
 
 notewithmeDirectives.directive('toggle', ['SocketIoService', '$window', function (SocketIoService, $window) {
+    var uniqueId = 1;
     return {
         restrict: 'C',
         link: function(scope, element, attrs){
-
+            scope.uniqueId = uniqueId++;
         },
+        transclude:true,
         scope: {
             toggle: '=ngModel'
         },
