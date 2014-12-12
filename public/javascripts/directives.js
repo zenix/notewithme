@@ -5,8 +5,8 @@ notewithmeDirectives.directive('toggle', ['SocketIoService', '$window', function
     var uniqueId = 1;
     return {
         restrict: 'C',
-        link: function(scope, element, attrs){
-            scope.uniqueId = uniqueId++;
+        link: function($scope, element, attrs){
+            $scope.uniqueId = uniqueId++;
         },
         transclude:true,
         scope: {

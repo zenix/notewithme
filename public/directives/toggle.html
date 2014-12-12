@@ -1,5 +1,5 @@
 <div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="onoff-{{::uniqueId}}" ng-model="toggle">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="onoff-{{::uniqueId}}" ng-model="toggle" ng-change="changeState(toggle)">
     <label class="onoffswitch-label" for="onoff-{{::uniqueId}}">
         <span class="onoffswitch-inner"></span>
         <span class="onoffswitch-switch"></span>

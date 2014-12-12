@@ -8,17 +8,26 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
         var canvas = new fabric.Canvas('mainCanvas');
         canvas.setWidth($window.innerWidth);
         canvas.setHeight($window.innerHeight);
-        canvas.selection = false;
+        canvas.calcOffset();
 
+        $scope.$watch('textSelected', function(newState, oldState){
+
+            canvas.isDrawingMode = false;
+        });
+
+        $scope.$watch('drawSelected', function(newState, oldState){
+            canvas.isDrawingMode = newState;
+        });
 
         canvas.on('mouse:down', function (options) {
             if (!options.target && $scope.textSelected) {
                 $scope.textSelected = false;
                 $scope.$apply();
+                console.log(options.e)
 
                 var iText = new fabric.IText('edit',{
-                    left: options.e.layerX,
-                    top: options.e.layerY,
+                    left: options.e.offsetX ? options.e.offsetX : options.e.layerX,
+                    top: options.e.offsetY ? options.e.offsetY : options.e.layerY,
                     backgroundColor: '#FFFFFF',
                     fill: '#000000',
                     fontSize: '12',
@@ -38,9 +47,11 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                 var iTextJson = JSON.stringify(iText);
                 socket.emit('addTextElement', iTextJson);
                 attachListenersToiText(iText);
-                canvas.add(iText);
                 canvas.calcOffset();
-            }
+                canvas.add(iText);
+                canvas.renderAll();
+
+            };
 
         });
 
