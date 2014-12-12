@@ -23,7 +23,6 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             if (!options.target && $scope.textSelected) {
                 $scope.textSelected = false;
                 $scope.$apply();
-                console.log(options.e)
 
                 var iText = new fabric.IText('edit',{
                     left: options.e.offsetX ? options.e.offsetX : options.e.layerX,
