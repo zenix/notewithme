@@ -62,7 +62,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                 socket.emit('writing', {'textId':iText.textId,'text':iText.text});
             });
             iText.on('moving', function(event){
-                socket.emit('moving', {'textId':iText.textId,'left': iText.left, 'top': iText.top})
+                socket.emit('moving', {'textId':iText.textId,'left': iText.left, 'top': iText.top,'originX': iText.originX, 'originY':iText.originY})
             });
 
             iText.on('rotating', function(event){
@@ -98,6 +98,8 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             var object = findObjectFromCanvasWith(message.textId);
             object.top = message.top;
             object.left= message.left;
+            object.originX = message.originX;
+            object.originY = message.originY;
             canvas.renderAll();
         });
 
