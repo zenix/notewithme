@@ -17,6 +17,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
 
         $scope.$watch('drawSelected', function(newState, oldState){
             canvas.isDrawingMode = newState;
+            canvas.calcOffset();
         });
 
         canvas.on('mouse:down', function (options) {
