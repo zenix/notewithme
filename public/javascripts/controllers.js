@@ -2,9 +2,9 @@
 
 var noteWithMeControllers = angular.module('noteWithMeControllers', []);
 
-noteWithMeControllers.controller('mainController', ['$scope'], function($scope){
+noteWithMeControllers.controller('mainController', ['$scope', function($scope){
     console.log("mo")
-});
+}]);
 
 noteWithMeControllers.controller('roomController', ['$scope', '$window', 'SocketIoService', function($scope,  $window, SocketIoService){
     fabric.Object.prototype.toObject = (function(toObject) {
