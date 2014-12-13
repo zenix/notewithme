@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <title>My Angular App!</title>
     <script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
@@ -8,11 +9,15 @@
     <script src="javascripts/application.js"></script>
     <script src="javascripts/services.js"></script>
     <script src="javascripts/directives.js"></script>
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   </head>
   <body ng-app="notewithme" ng-controller="MainCtrl" >
-  <span class="toggle" ng-model="textSelected"></span>
-  <span class="toggle" ng-model="drawSelected"></span>
+  <div>
+    <buttons-radio class="btn-group" data-toggle="buttons-radio"
+                   model='canvasToolModel'
+                   options='canvasToolOptions'>
+    </buttons-radio>
+  </div>
   <canvas id="mainCanvas"></canvas>
 
   </body>

@@ -4,24 +4,27 @@ var application = angular.module('notewithme', ['notewithmeServices', 'notewithm
 
 application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
     function ($scope, $window, SocketIoService) {
+        $scope.canvasToolOptions = ["Write", "Draw"];
+        $scope.canvasToolModel = "Write";
+
+        $scope.$watch('canvasToolModel', function(newState, oldState){
+            if(newState === 'Draw'){
+                canvas.isDrawingMode = true;
+                canvas.calcOffset();
+            } else if(newState === 'Write'){
+                canvas.isDrawingMode = false;;
+                canvas.calcOffset();
+            }
+        });
+
         var socket = SocketIoService.socket();
         var canvas = new fabric.Canvas('mainCanvas');
         canvas.setWidth($window.innerWidth);
         canvas.setHeight($window.innerHeight);
         canvas.calcOffset();
 
-        $scope.$watch('textSelected', function(newState, oldState){
-
-            canvas.isDrawingMode = false;
-        });
-
-        $scope.$watch('drawSelected', function(newState, oldState){
-            canvas.isDrawingMode = newState;
-            canvas.calcOffset();
-        });
-
         canvas.on('mouse:down', function (options) {
-            if (!options.target && $scope.textSelected) {
+            if (!options.target && $scope.canvasToolModel === 'Write') {
                 $scope.textSelected = false;
                 $scope.$apply();
 
