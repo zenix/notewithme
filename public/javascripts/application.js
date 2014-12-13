@@ -71,8 +71,6 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                 canvas.calcOffset();
                 canvas.add(iText);
                 canvas.renderAll();
-                console.log(canvas.getObjects())
-
             };
 
         });
