@@ -59,7 +59,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                     top: options.e.offsetY ? options.e.offsetY : options.e.layerY,
                     backgroundColor: '#FFFFFF',
                     fill: '#000000',
-                    fontSize: '12',
+                    fontSize: '14',
                     fontFamily: 'Arial'
                 });
 
