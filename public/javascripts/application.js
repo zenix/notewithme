@@ -177,8 +177,8 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                         attachListenersToPah(fabricObject);
                     }else if(fabricObject.type === 'group'){
                         var toRemove = [];
-                        canvas.getObjects().forEach(function(element){
-                            toRemove.push(element);
+                        fabricObject._objects.forEach(function(element){
+                            toRemove.push(findObjectFromCanvasWith(element.objectId));
                         });
 
                         toRemove.forEach(function(element){
