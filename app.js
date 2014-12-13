@@ -18,7 +18,7 @@ io.on('connection', function(socket){
     socket.on('disconnect', function(msg){
         console.log('user disconnected');
     });
-    addListener('addTextElement');
+    addListener('addObject');
     addListener('writing');
     addListener('scaling');
     addListener('rotating');

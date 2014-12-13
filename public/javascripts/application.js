@@ -4,17 +4,26 @@ var application = angular.module('notewithme', ['notewithmeServices', 'notewithm
 
 application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
     function ($scope, $window, SocketIoService) {
-        $scope.canvasToolOptions = ["Write", "Draw"];
+        fabric.Object.prototype.toObject = (function(toObject) {
+            return function() {
+                return fabric.util.object.extend(toObject.call(this), {
+                    objectId: this.objectId
+                });
+            };
+        })(fabric.Object.prototype.toObject);
+
+        $scope.canvasToolOptions = ['None', 'Write', 'Draw'];
         $scope.canvasToolModel = "Write";
 
         $scope.$watch('canvasToolModel', function(newState, oldState){
             if(newState === 'Draw'){
                 canvas.isDrawingMode = true;
-                canvas.calcOffset();
             } else if(newState === 'Write'){
                 canvas.isDrawingMode = false;;
-                canvas.calcOffset();
+            } else {
+                canvas.isDrawingMode = false;
             }
+            canvas.calcOffset();
         });
 
         var socket = SocketIoService.socket();
@@ -23,9 +32,17 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
         canvas.setHeight($window.innerHeight);
         canvas.calcOffset();
 
+        canvas.on('path:created', function(options){
+            var fabricObject = options.path;
+            fabricObject.objectId = guid();
+            var fabricObjectJson = JSON.stringify(fabricObject);
+            socket.emit('addObject', fabricObjectJson);
+            attacheListenersToPah(fabricObject)
+        })
+
         canvas.on('mouse:down', function (options) {
             if (!options.target && $scope.canvasToolModel === 'Write') {
-                $scope.textSelected = false;
+                $scope.canvasToolModel = 'None';
                 $scope.$apply();
 
                 var iText = new fabric.IText('edit',{
@@ -37,18 +54,10 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                     fontFamily: 'Arial'
                 });
 
-                iText.toObject = (function(toObject) {
-                    return function() {
-                        return fabric.util.object.extend(toObject.call(this), {
-                            textId: this.textId
-                        });
-                    };
-                })(iText.toObject);
-
-                iText.textId = guid();
+                iText.objectId = guid();
 
                 var iTextJson = JSON.stringify(iText);
-                socket.emit('addTextElement', iTextJson);
+                socket.emit('addObject', iTextJson);
                 attachListenersToiText(iText);
                 canvas.calcOffset();
                 canvas.add(iText);
@@ -72,32 +81,35 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
 
 
 
+
         function attachListenersToiText(iText){
-
             iText.on('text:changed', function(event){
-                socket.emit('writing', {'textId':iText.textId,'text':iText.text});
+                socket.emit('writing', {'objectId':iText.objectId,'text':iText.text});
             });
-            iText.on('moving', function(event){
-                socket.emit('moving', {'textId':iText.textId,'left': iText.left, 'top': iText.top,'originX': iText.originX, 'originY':iText.originY})
-            });
-
-            iText.on('rotating', function(event){
-                socket.emit('rotating',{'textId':iText.textId, 'angle':iText.angle,'originX': iText.originX, 'originY':iText.originY, 'left': iText.left, 'top': iText.top});
-            });
-
-            iText.on('scaling', function(event){
-                socket.emit('scaling', {'textId': iText.textId, 'originX': iText.originX, 'originY':iText.originY, 'scaleX': iText.scaleX, 'scaleY':iText.scaleY, 'left': iText.left, 'top': iText.top});
-            });
-
+            attachCommonListeners(iText);
         };
 
-        function addTextElementButton(){
-
+        function attacheListenersToPah(path){
+            attachCommonListeners(path);
         }
 
-        function findObjectFromCanvasWith(textId) {
+        function attachCommonListeners(fabricObject){
+            fabricObject.on('moving', function(event){
+                socket.emit('moving', {'objectId':fabricObject.objectId,'left': fabricObject.left, 'top': fabricObject.top,'originX': fabricObject.originX, 'originY':fabricObject.originY})
+            });
+
+            fabricObject.on('rotating', function(event){
+                socket.emit('rotating',{'objectId':fabricObject.objectId, 'angle':fabricObject.angle,'originX': fabricObject.originX, 'originY':fabricObject.originY, 'left': fabricObject.left, 'top': fabricObject.top});
+            });
+
+            fabricObject.on('scaling', function(event){
+                socket.emit('scaling', {'objectId': fabricObject.objectId, 'originX': fabricObject.originX, 'originY':fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY':fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
+            });
+        }
+
+        function findObjectFromCanvasWith(objectId) {
             return canvas.getObjects().filter(function (object) {
-                if (object.textId === textId) {
+                if (object.objectId === objectId) {
                     return true;
                 }
                 return false;
@@ -105,13 +117,13 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
         }
 
         socket.on('writing', function(message){
-            var object = findObjectFromCanvasWith(message.textId);
+            var object = findObjectFromCanvasWith(message.objectId);
             object.text = message.text;
             canvas.renderAll();
         });
 
         socket.on('moving', function(message){
-            var object = findObjectFromCanvasWith(message.textId);
+            var object = findObjectFromCanvasWith(message.objectId);
             object.top = message.top;
             object.left= message.left;
             object.originX = message.originX;
@@ -120,7 +132,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
         });
 
         socket.on('rotating', function(message){
-            var object = findObjectFromCanvasWith(message.textId);
+            var object = findObjectFromCanvasWith(message.objectId);
             object.angle = message.angle;
             object.originX = message.originX;
             object.originY = message.originY;
@@ -130,7 +142,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
         });
 
         socket.on('scaling', function(message){
-            var object = findObjectFromCanvasWith(message.textId);
+            var object = findObjectFromCanvasWith(message.objectId);
             object.scaleX = message.scaleX;
             object.scaleY = message.scaleY;
             object.top = message.top;
@@ -140,15 +152,20 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             canvas.renderAll();
         });
 
-        socket.on('addTextElement', function(message){
+        socket.on('addObject', function(message){
             var jsonObject = JSON.parse(message);
             fabric.util.enlivenObjects([jsonObject], function(objects){
                 var origRenderOnAddRemove = canvas.renderOnAddRemove;
                 canvas.renderOnAddRemove = false;
 
-                objects.forEach(function(o) {
-                    attachListenersToiText(o);
-                    canvas.add(o);
+                objects.forEach(function(fabricObject) {
+                    if(fabricObject.type === 'i-text'){
+                        attachListenersToiText(fabricObject);
+                    }else if(fabricObject.type === 'path'){
+                        attacheListenersToPah(fabricObject);
+                    }
+
+                    canvas.add(fabricObject);
                 });
 
                 canvas.renderOnAddRemove = origRenderOnAddRemove;
