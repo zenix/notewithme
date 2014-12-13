@@ -32,12 +32,21 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
         canvas.setHeight($window.innerHeight);
         canvas.calcOffset();
 
+        canvas.on('selection:created', function(options){
+            var fabricObject = options.target;
+            fabricObject.objectId = guid();
+            var fabricObjectJson = JSON.stringify(fabricObject);
+            socket.emit('addObject', fabricObjectJson);
+
+            attachListenerstoGroup(fabricObject);
+        })
+
         canvas.on('path:created', function(options){
             var fabricObject = options.path;
             fabricObject.objectId = guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
             socket.emit('addObject', fabricObjectJson);
-            attacheListenersToPah(fabricObject)
+            attachListenersToPah(fabricObject)
         })
 
         canvas.on('mouse:down', function (options) {
@@ -62,6 +71,7 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                 canvas.calcOffset();
                 canvas.add(iText);
                 canvas.renderAll();
+                console.log(canvas.getObjects())
 
             };
 
@@ -89,8 +99,12 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
             attachCommonListeners(iText);
         };
 
-        function attacheListenersToPah(path){
+        function attachListenersToPah(path){
             attachCommonListeners(path);
+        }
+
+        function attachListenerstoGroup(group){
+            attachCommonListeners(group);
         }
 
         function attachCommonListeners(fabricObject){
@@ -162,7 +176,17 @@ application.controller('MainCtrl', ['$scope', '$window', 'SocketIoService',
                     if(fabricObject.type === 'i-text'){
                         attachListenersToiText(fabricObject);
                     }else if(fabricObject.type === 'path'){
-                        attacheListenersToPah(fabricObject);
+                        attachListenersToPah(fabricObject);
+                    }else if(fabricObject.type === 'group'){
+                        var toRemove = [];
+                        canvas.getObjects().forEach(function(element){
+                            toRemove.push(element);
+                        });
+
+                        toRemove.forEach(function(element){
+                           canvas.remove(element);
+                        });
+                        attachListenerstoGroup(fabricObject);
                     }
 
                     canvas.add(fabricObject);
