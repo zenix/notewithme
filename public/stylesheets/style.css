@@ -1,16 +1,3 @@
 #mainCanvas {
   position: absolute;
 }
-
-.write {
-  float:left;
-}
-
-.toggle {
-  float:left;
-}
-
-.text {
-  align: center;
-  display: block;
-}
