@@ -12,8 +12,8 @@ noteWithMeControllers.controller('mainController', ['$scope','$location','UserSe
 
 noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$window', 'SocketIoService','UserService', function($scope, $routeParams, $window, SocketIoService, UserService){
     $scope.user = UserService.user();
-    console.log($routeParams.roomName);
-    console.log($scope.user);
+
+    SocketIoService.connectRoom($routeParams.roomName);
     fabric.Object.prototype.toObject = (function(toObject) {
         return function() {
             return fabric.util.object.extend(toObject.call(this), {
@@ -46,7 +46,7 @@ noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$
         var fabricObject = options.target;
         fabricObject.objectId = guid();
         var fabricObjectJson = JSON.stringify(fabricObject);
-        socket.emit('addObject', fabricObjectJson);
+        SocketIoService.emit('addObject', fabricObjectJson);
 
         attachListenerstoGroup(fabricObject);
     })
@@ -55,7 +55,7 @@ noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$
         var fabricObject = options.path;
         fabricObject.objectId = guid();
         var fabricObjectJson = JSON.stringify(fabricObject);
-        socket.emit('addObject', fabricObjectJson);
+        SocketIoService.emit('addObject', fabricObjectJson);
         attachListenersToPah(fabricObject)
     })
 
@@ -76,7 +76,7 @@ noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$
             iText.objectId = guid();
 
             var iTextJson = JSON.stringify(iText);
-            socket.emit('addObject', iTextJson);
+            SocketIoService.emit('addObject', iTextJson);
             attachListenersToiText(iText);
             canvas.calcOffset();
             canvas.add(iText);
@@ -103,7 +103,7 @@ noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$
 
     function attachListenersToiText(iText){
         iText.on('text:changed', function(event){
-            socket.emit('writing', {'objectId':iText.objectId,'text':iText.text});
+            SocketIoService.emit('writing', {'objectId':iText.objectId,'text':iText.text});
         });
         attachCommonListeners(iText);
     };
@@ -118,15 +118,15 @@ noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$
 
     function attachCommonListeners(fabricObject){
         fabricObject.on('moving', function(event){
-            socket.emit('moving', {'objectId':fabricObject.objectId,'left': fabricObject.left, 'top': fabricObject.top,'originX': fabricObject.originX, 'originY':fabricObject.originY})
+            SocketIoService.emit('moving', {'objectId':fabricObject.objectId,'left': fabricObject.left, 'top': fabricObject.top,'originX': fabricObject.originX, 'originY':fabricObject.originY})
         });
 
         fabricObject.on('rotating', function(event){
-            socket.emit('rotating',{'objectId':fabricObject.objectId, 'angle':fabricObject.angle,'originX': fabricObject.originX, 'originY':fabricObject.originY, 'left': fabricObject.left, 'top': fabricObject.top});
+            SocketIoService.emit('rotating',{'objectId':fabricObject.objectId, 'angle':fabricObject.angle,'originX': fabricObject.originX, 'originY':fabricObject.originY, 'left': fabricObject.left, 'top': fabricObject.top});
         });
 
         fabricObject.on('scaling', function(event){
-            socket.emit('scaling', {'objectId': fabricObject.objectId, 'originX': fabricObject.originX, 'originY':fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY':fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
+            SocketIoService.emit('scaling', {'objectId': fabricObject.objectId, 'originX': fabricObject.originX, 'originY':fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY':fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
         });
     }
 
