@@ -26,7 +26,7 @@ noteWithMeControllers.controller('roomController', ['$scope', '$location', '$rou
     }
 
     function modalWith(action) {
-        var element = angular.element('#startModal').clone();
+        var element = angular.element('#startModal');
         $compile(element)($scope);
         element.modal(action);
     }
