@@ -3,6 +3,7 @@
 var noteWithMeControllers = angular.module('noteWithMeControllers', []);
 
 noteWithMeControllers.controller('mainController', ['$scope', function($scope){
+
 }]);
 
 noteWithMeControllers.controller('roomController', ['$scope', '$window', 'SocketIoService', function($scope,  $window, SocketIoService){
@@ -77,15 +78,16 @@ noteWithMeControllers.controller('roomController', ['$scope', '$window', 'Socket
 
     });
 
+    function randomString() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+
     function guid() {
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
         return (function() {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                s4() + '-' + s4() + s4() + s4();
+            return randomString() + randomString() + '-' + randomString() + '-' + randomString() + '-' +
+                randomString() + '-' + randomString() + randomString() + randomString();
         })();
     };
 
