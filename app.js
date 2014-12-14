@@ -14,13 +14,13 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 io.on('connection', function(socket){
-    console.log('a user connected ');
-    console.log(socket);
+    console.log('a user connected');
     socket.on('disconnect', function(msg){
         console.log('user disconnected');
     });
 
     socket.on('joinRoom', function(msg){
+        console.log(msg.name + ' joined ' + msg.room)
         socket.user = msg;
         socket.join(msg.room);
     });
