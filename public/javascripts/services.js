@@ -7,3 +7,10 @@ services.service('SocketIoService',function () {
         }
     }
 );
+
+services.service('UserService', function(){
+    var user = {};
+    this.user = function(){
+        return user;
+    }
+});

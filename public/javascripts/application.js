@@ -4,7 +4,7 @@ var application = angular.module('notewithme', ['ngRoute', 'notewithmeServices',
 
 application.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-        when('/room', {
+        when('/room/:roomName', {
             templateUrl: 'partials/room.html',
             controller: 'roomController'
         }).

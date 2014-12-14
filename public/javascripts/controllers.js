@@ -2,11 +2,18 @@
 
 var noteWithMeControllers = angular.module('noteWithMeControllers', []);
 
-noteWithMeControllers.controller('mainController', ['$scope', function($scope){
-
+noteWithMeControllers.controller('mainController', ['$scope','$location','UserService', function($scope, $location,UserService){
+    $scope.start = function(user){
+        UserService.user().name = user.name;
+        UserService.user().room = user.room;
+        $location.path('/room/'+user.room);
+    }
 }]);
 
-noteWithMeControllers.controller('roomController', ['$scope', '$window', 'SocketIoService', function($scope,  $window, SocketIoService){
+noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$window', 'SocketIoService','UserService', function($scope, $routeParams, $window, SocketIoService, UserService){
+    $scope.user = UserService.user();
+    console.log($routeParams.roomName);
+    console.log($scope.user);
     fabric.Object.prototype.toObject = (function(toObject) {
         return function() {
             return fabric.util.object.extend(toObject.call(this), {
