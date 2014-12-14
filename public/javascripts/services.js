@@ -2,12 +2,11 @@
 
 var services = angular.module('notewithmeServices', []);
 services.service('SocketIoService',function () {
-        var socket;
-        var namespace;
-        this.connectRoom = function(room){
-            console.log("connecting to " + room);
-            namespace = room;
-            socket = io(room);
+        var socket = io();
+        var chatUser;
+        this.joinRoom = function(user){
+            chatUser = user;
+            socket.emit('joinRoom',user);
         }
 
         this.socket = function (namespace) {
@@ -15,7 +14,7 @@ services.service('SocketIoService',function () {
         }
 
         this.emit = function(action, message){
-            socket.to(namespace).emit(action, message);
+            socket.emit(action, message);
         }
     }
 );

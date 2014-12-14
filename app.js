@@ -14,9 +14,15 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 io.on('connection', function(socket){
-    console.log('a user connected');
+    console.log('a user connected ');
+    console.log(socket);
     socket.on('disconnect', function(msg){
         console.log('user disconnected');
+    });
+
+    socket.on('joinRoom', function(msg){
+        socket.user = msg;
+        socket.join(msg.room);
     });
     addListener('addObject');
     addListener('writing');
@@ -26,7 +32,8 @@ io.on('connection', function(socket){
 
     function addListener(name){
         socket.on(name, function(msg){
-            socket.broadcast.emit(name, msg);
+            var user = socket.user;
+            socket.broadcast.to(user.room).emit(name, msg);
         });
     };
 });

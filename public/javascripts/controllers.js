@@ -13,7 +13,7 @@ noteWithMeControllers.controller('mainController', ['$scope','$location','UserSe
 noteWithMeControllers.controller('roomController', ['$scope', '$routeParams', '$window', 'SocketIoService','UserService', function($scope, $routeParams, $window, SocketIoService, UserService){
     $scope.user = UserService.user();
 
-    SocketIoService.connectRoom($routeParams.roomName);
+    SocketIoService.joinRoom(UserService.user());
     fabric.Object.prototype.toObject = (function(toObject) {
         return function() {
             return fabric.util.object.extend(toObject.call(this), {
