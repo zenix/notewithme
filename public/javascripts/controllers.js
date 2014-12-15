@@ -12,7 +12,6 @@ noteWithMeControllers.controller('mainController', ['$scope','$location','UserSe
 
 noteWithMeControllers.controller('roomController', ['$scope', '$location', '$routeParams', '$compile', '$window', 'SocketIoService','UserService','FabricService', function($scope, $location, $routeParams, $compile, $window, SocketIoService, UserService,FabricService){
 
-    $scope.foo = function() {console.log('foo')}
     $scope.$watch('modalsubmit', function(newValue, oldValue){
         if(newValue){
             UserService.user().name = newValue.name;
