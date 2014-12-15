@@ -155,6 +155,10 @@ services.service('FabricService',['$routeParams', '$window', 'SocketIoService','
             })[0];
         }
 
+        socket.on('connect', function(){
+            SocketIoService.joinRoom(UserService.user());
+        })
+
         socket.on('syncClient', function(message){
             SocketIoService.emit('syncClient', {clientId:message.clientId, canvas:JSON.stringify(canvas)});
         });

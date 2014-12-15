@@ -48,7 +48,9 @@ io.on('connection', function(socket){
     function addListener(name){
         socket.on(name, function(msg){
             var user = socket.user;
-            socket.broadcast.to(user.room).emit(name, msg);
+            if(user) {
+                socket.broadcast.to(user.room).emit(name, msg);
+            }
         });
     };
 });
