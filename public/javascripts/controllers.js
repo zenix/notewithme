@@ -17,7 +17,6 @@ noteWithMeControllers.controller('roomController', ['$scope', '$location', '$rou
         if(newValue){
             UserService.user().name = newValue.name;
             UserService.user().room = $routeParams.roomName;
-            modalWith('hide');
             FabricService.start($scope);
         }
     })
@@ -28,12 +27,5 @@ noteWithMeControllers.controller('roomController', ['$scope', '$location', '$rou
         $scope.modal.title = 'Please fill name and you\'re free to go.';
     }else{
         FabricService.start($scope);
-    }
-
-    function modalWith(action) {
-        var element = angular.element('#startModal');
-        $compile(element)($scope);
-        element.modal(action);
-
     }
 }]);

@@ -16,9 +16,10 @@ notewithmeDirectives.directive('modal', function () {
                 element.modal('show');
             }
         },
-        controller: function($scope){
+        controller: function($scope, $element){
             $scope.submit = function(content){
                 $scope.modalsubmit = content;
+                $element.modal('hide');
             }
         }
     };
