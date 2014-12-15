@@ -1,6 +1,23 @@
 
 var notewithmeDirectives = angular.module('notewithmeDirectives', []);
 
+notewithmeDirectives.directive('eaInput', function () {
+    return {
+        restrict: 'E',
+        scope: {
+            label: '@',
+            type: '@',
+            name: '@',
+            info: '@',
+            errors: '@',
+            validate: '&',
+            model :'=ngModel'
+        },
+        replace: true,
+        templateUrl: appjsdir + "ea-input/ea-input.html"
+    };
+});
+
 notewithmeDirectives.directive('buttonsRadio', [ function () {
     return {
         restrict: 'E',

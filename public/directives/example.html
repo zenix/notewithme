@@ -1,0 +1,17 @@
+<ea-input label="{{labelmuuttuja}}">
+
+<div class="ea-input-with-label" ng-class="{ 'eam-selected': hasFocus }" ng-form="eaForm">
+    <label ng-class="{ 'visible': model.length > 0 }">{{label}}<span style="visibility: hidden">fix autofill</span></label>
+    <div class="input-container">
+        <input class="ea-input"
+               type="{{type}}"
+               placeholder="{{label}}"
+               name="{{name}}"
+               ng-model="model"
+               ng-focus="hasFocus=true"
+               ng-blur="hasFocus=false">
+    </div>
+    <div ng-if="info" class="message">
+        <div class="info">{{info}}</div>
+    </div>
+</div>
