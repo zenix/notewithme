@@ -26,8 +26,10 @@ noteWithMeControllers.controller('roomController', ['$scope', '$location', '$rou
     }
 
     function modalWith(action) {
-        var element = angular.element('#startModal');
-        $compile(element)($scope);
-        element.modal(action);
+        setTimeout(function() {
+            var element = angular.element('#startModal');
+            $compile(element)($scope);
+            element.modal(action);
+        }, 200);
     }
 }]);
