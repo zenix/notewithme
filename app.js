@@ -23,7 +23,22 @@ io.on('connection', function(socket){
         console.log(msg.name + ' joined ' + msg.room)
         socket.user = msg;
         socket.join(msg.room);
+        if(Object.keys(io.sockets.connected).length > 1) {
+            var clients_in_the_room = io.sockets.adapter.rooms[msg.room];
+            for (var clientId in clients_in_the_room) {
+                if(clientId != socket.id){
+                    var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+                    client_socket.emit('syncClient', {clientId:socket.id})
+                    break;
+                }
+            }
+        }
     });
+
+    socket.on('syncClient', function(msg){
+        io.sockets.connected[msg.clientId].emit('updateCanvas', {canvas:msg.canvas});
+    })
+
     addListener('addObject');
     addListener('writing');
     addListener('scaling');

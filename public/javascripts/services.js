@@ -155,6 +155,15 @@ services.service('FabricService',['$routeParams', '$window', 'SocketIoService','
             })[0];
         }
 
+        socket.on('syncClient', function(message){
+            SocketIoService.emit('syncClient', {clientId:message.clientId, canvas:JSON.stringify(canvas)});
+        });
+
+        socket.on('updateCanvas', function(message){
+            canvas.loadFromJSON(message.canvas);
+            canvas.renderAll();
+        });
+
         socket.on('writing', function(message){
             var object = findObjectFromCanvasWith(message.objectId);
             object.text = message.text;
