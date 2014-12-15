@@ -38,7 +38,10 @@ services.service('FabricService',['$routeParams', '$window', 'SocketIoService','
             };
         })(fabric.Object.prototype.toObject);
 
-        $scope.canvasToolOptions = ['None', 'Write', 'Draw'];
+        $scope.canvasToolOptions = [
+            {name:'None', glyphiconicon:'glyphicon-off'},
+            {name:'Write', glyphiconicon:'glyphicon-font'},
+            {name:'Draw', glyphiconicon:'glyphicon-pencil'}];
         $scope.canvasToolModel = "Write";
 
         $scope.$watch('canvasToolModel', function(newState, oldState){
