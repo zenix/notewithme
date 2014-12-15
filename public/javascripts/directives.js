@@ -1,20 +1,26 @@
 
 var notewithmeDirectives = angular.module('notewithmeDirectives', []);
 
-notewithmeDirectives.directive('eaInput', function () {
+notewithmeDirectives.directive('modal', function () {
     return {
         restrict: 'E',
         scope: {
-            label: '@',
-            type: '@',
-            name: '@',
-            info: '@',
-            errors: '@',
-            validate: '&',
-            model :'=ngModel'
+            title: '@',
+            show: '@',
+            modalsubmit :'=ngModel'
         },
         replace: true,
-        templateUrl: appjsdir + "ea-input/ea-input.html"
+        templateUrl:  'directives/modal.html',
+        link: function(scope, element, attributes){
+            if(scope.show === 'true') {
+                element.modal('show');
+            }
+        },
+        controller: function($scope){
+            $scope.submit = function(content){
+                $scope.modalsubmit = content;
+            }
+        }
     };
 });
 
