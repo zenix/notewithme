@@ -1,7 +1,5 @@
-
-var notewithmeDirectives = angular.module('notewithmeDirectives', []);
-
-notewithmeDirectives.directive('modal', function () {
+'use strict';
+nwmApplication.directive('modal', function () {
     return {
         restrict: 'E',
         scope: {
@@ -24,16 +22,3 @@ notewithmeDirectives.directive('modal', function () {
         }
     };
 });
-
-notewithmeDirectives.directive('buttonsRadio', [ function () {
-    return {
-        restrict: 'E',
-        scope: { model: '=', options:'=', glyphiconicon: '@'},
-        controller: function($scope){
-            $scope.activate = function(option){
-                $scope.model = option;
-            };
-        },
-        templateUrl: 'directives/toggle.html'
-    }
-}]);

@@ -1,0 +1,24 @@
+{
+  "name": "notewithme",
+  "version": "1.0.0",
+  "homepage": "https://github.com/zenix/notewithme",
+  "authors": [
+    "Jari Timonen <jari.timonen@zeniitti.net>"
+  ],
+  "description": "Start, Share, Collaborate",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "socket.io": "~1.2.1",
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.3.1",
+    "angularjs": "~1.3.7",
+    "fabric": "~1.4.13"
+  }
+}

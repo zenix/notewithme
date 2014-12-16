@@ -1,6 +1,6 @@
 'use strict';
 
-var nwmApplication = angular.module('notewithme', ['ngRoute', 'notewithmeDirectives']);
+var nwmApplication = angular.module('notewithme', ['ngRoute']);
 
 nwmApplication.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
