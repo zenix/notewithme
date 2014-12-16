@@ -1,8 +1,8 @@
 'use strict';
 
-var application = angular.module('notewithme', ['ngRoute', 'notewithmeServices', 'noteWithMeControllers', 'notewithmeDirectives']);
+var nwmApplication = angular.module('notewithme', ['ngRoute', 'notewithmeDirectives']);
 
-application.config(['$routeProvider', function($routeProvider) {
+nwmApplication.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/room/:roomName', {
             templateUrl: 'partials/room.html',
@@ -15,5 +15,4 @@ application.config(['$routeProvider', function($routeProvider) {
         otherwise({
             redirectTo: '/'
         })
-
 }]);
