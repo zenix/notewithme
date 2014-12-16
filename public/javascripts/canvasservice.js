@@ -1,7 +1,42 @@
 'use strict';
 
 nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoService','UserService','Utils','FabricService', function($routeParams, $window, SocketIoService,UserService, Utils, FabricService){
+    var self = this;
+    var canvasToolOptions = [
+        {name: 'None', glyphiconicon: 'glyphicon-off', active: true, isDrawingMode: false},
+        {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, isDrawingMode: false},
+        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, isDrawingMode: true}
+    ];
 
+    this.canvasTools = function() {
+        return canvasToolOptions;
+    }
+
+    this.findActiveCanvasTool = function(){
+        return canvasToolOptions.filter(function(tool){
+            if(tool.active){
+                return true;
+            }
+            return false;
+        })[0];
+    }
+
+    this.findCanvasTool = function(name){
+        return canvasToolOptions.filter(function(tool){
+            if(tool.name === name ){
+                return true;
+            }
+            return false;
+        })[0];
+    }
+
+    this.setActiveCanvasTool = function(name) {
+        this.findActiveCanvasTool().active = false;
+        var tool = this.findCanvasTool(name);
+        tool.active = true;
+        FabricService.canvas().isDrawingMode = tool.isDrawingMode;
+
+    }
 
     this.isDrawingMode = function(value){
         FabricService.canvas().isDrawingMode = value;
@@ -47,8 +82,9 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         }
 
         function mouseDown(options){
+            //todo:
             if (!options.target && $scope.canvasToolModel.name === 'Write') {
-                $scope.canvasToolModel = 'None';
+                self.setActiveCanvasTool('None');
                 $scope.$apply();
                 var iText = FabricService.createItext(options);
                 var iTextJson = JSON.stringify(iText);

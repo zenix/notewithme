@@ -2,9 +2,7 @@
 
 nwmApplication.controller('roomController', ['$scope', '$location', '$routeParams', '$compile', '$window', 'SocketIoService','UserService','CanvasService', function($scope, $location, $routeParams, $compile, $window, SocketIoService, UserService,CanvasService){
 
-
     if(UserService.isEmpty()){
-
         $scope.modal = {};
         $scope.modal.show = true;
         $scope.modal.title = 'Please fill name and you\'re free to go.';
@@ -20,16 +18,14 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
     }
 
     function initializeCanvasToolOptions() {
-       $scope.canvasToolOptions = [
-           {name: 'None', glyphiconicon: 'glyphicon-off'},
-           {name: 'Write', glyphiconicon: 'glyphicon-font'},
-           {name: 'Draw', glyphiconicon: 'glyphicon-pencil'}
-       ];
-       $scope.canvasToolModel = "Write";
+        $scope.canvasToolOptions = CanvasService.canvasTools();
+        $scope.canvasToolModel =  CanvasService.findActiveCanvasTool();
+
     }
 
     function watchCanvasToolModel() {
         $scope.$watch('canvasToolModel', function (newState, oldState) {
+            CanvasService.setActiveCanvasTool(newState.name);
             if (newState.name === 'Draw') {
                 CanvasService.isDrawingMode(true);
             } else if (newState.name === 'Write') {
