@@ -19,23 +19,23 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
 
     function initializeCanvasToolOptions() {
         $scope.canvasToolOptions = CanvasService.canvasTools();
-        $scope.canvasToolModel =  CanvasService.findActiveCanvasTool();
+        $scope.canvasToolModel =  CanvasService.findActiveCanvasTool().name;
 
     }
 
     function watchCanvasToolModel() {
         $scope.$watch('canvasToolModel', function (newState, oldState) {
             CanvasService.setActiveCanvasTool(newState.name);
-            if (newState.name === 'Draw') {
-                CanvasService.isDrawingMode(true);
-            } else if (newState.name === 'Write') {
-                CanvasService.isDrawingMode(false);
-            } else {
-                CanvasService.isDrawingMode(false);
-            }
             CanvasService.calculateOffset();
         });
-        }
+    }
+
+    function watchCanvasToolsService(){
+        $scope.$watch(function(){ return CanvasService.canvasTools()}, function(newState, oldState){
+            $scope.canvasToolModel = findActiveCanvasTool().name;
+            $scope.$apply();
+        }, true);
+    }
 
     function watchModalSubmit() {
         $scope.$watch('modalsubmit', function (newValue, oldValue) {

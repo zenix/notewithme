@@ -31,11 +31,14 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
     }
 
     this.setActiveCanvasTool = function(name) {
-        this.findActiveCanvasTool().active = false;
+        var activeCanvasTool = this.findActiveCanvasTool();
+        if(!name || activeCanvasTool.name === name){
+            return;
+        }
+        activeCanvasTool.active = false;
         var tool = this.findCanvasTool(name);
         tool.active = true;
         FabricService.canvas().isDrawingMode = tool.isDrawingMode;
-
     }
 
     this.isDrawingMode = function(value){
@@ -82,10 +85,8 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         }
 
         function mouseDown(options){
-            //todo:
-            if (!options.target && $scope.canvasToolModel.name === 'Write') {
+            if (!options.target && self.findActiveCanvasTool().name === 'Write') {
                 self.setActiveCanvasTool('None');
-                $scope.$apply();
                 var iText = FabricService.createItext(options);
                 var iTextJson = JSON.stringify(iText);
                 SocketIoService.emit('addObject', iTextJson);
