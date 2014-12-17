@@ -64,12 +64,6 @@ app.use("*", function (req, res) {
     res.sendFile(__dirname + '/public_html/index.html');
 });
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
 
 // TODO: error handlers
 
