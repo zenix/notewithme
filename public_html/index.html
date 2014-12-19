@@ -2,9 +2,10 @@
 <html lang="en" ng-app="notewithme">
   <head>
     <title>notewithme</title>
+    <!-- build:js public_html/javascript/notewithme.min.js -->
     <script src="bower_components/socket.io-client/socket.io.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script><!-- only modal.js needed -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angularjs/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/fabric/dist/fabric.js"></script>
@@ -19,7 +20,10 @@
     <script src="javascripts/canvasservice.js"></script>
     <script src="javascripts/buttonsradio.js"></script>
     <script src="javascripts/modal.js"></script>
+    <!-- endbuild -->
+    <!-- build:css public_html/stylesheets/notewithme.min.css -->
     <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+    <!-- endbuild -->
   </head>
   <body>
     <div ng-view></div>
