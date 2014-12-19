@@ -9,20 +9,14 @@ module.exports = function (grunt) {
             main: {
                 expand: true,
                 cwd: 'public_html/',
-                src: ['**', '!js/**', '!lib/**', '!**/*.css'],
-                dest: 'dist/'
-            }//,
-            //shims: {
-              //  expand: true,
-           //     cwd: 'app/lib/webshim/shims',
-            //    src: ['**'],
-            //    dest: 'dist/js/shims'
-           // }
+                src: ['**', '!stylesheets/**', '!javascripts/**', '!bower_components/**'],
+                dest: 'dist/public_html'
+            }
         },
  
         rev: {
             files: {
-                src: ['dist/**/*.{js,css}', '!dist/js/shims/**']
+                src: ['dist/**/*.{js,css}']
             }
         },
  
@@ -31,7 +25,7 @@ module.exports = function (grunt) {
         },
  
         usemin: {
-            html: ['dist/index.html']
+            html: ['dist/public_html/index.html']
         },
  
         uglify: {
