@@ -7,13 +7,13 @@ module.exports = function (grunt) {
  
         copy: {
             main: {
-                expand: true,
-                cwd: 'public_html/',
-                src: ['**', '!stylesheets/**', '!javascripts/**', '!bower_components/**'],
-                dest: 'dist/public_html'
+                files: [
+                    { expand: true, cwd: 'public_html/', src: ['**', '!stylesheets/**', '!javascripts/**', '!bower_components/**'], dest: 'dist/public_html'},
+                    { expand: true, src: 'app.js', dest: 'dist'},
+                    { expand: true, src: ['node_modules/**'], dest: 'dist/node_modules'}
+                ]
             }
         },
- 
         rev: {
             files: {
                 src: ['dist/**/*.{js,css}']
