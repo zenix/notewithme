@@ -10,6 +10,9 @@ var mainBowerFiles = require('main-bower-files');
 var gulpFilter = require('gulp-filter');
 var ngAnnotate = require('gulp-ng-annotate');
 
+
+//todo: cleanup javascripts / bower_components
+// bootsrap-modal only
 gulp.task('scripts', function() {
     return gulp.src('public_html/javascripts/*.js')
         .pipe(ngAnnotate())
