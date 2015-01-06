@@ -28,9 +28,13 @@ gulp.task('revision', function(){
         .pipe(gulp.dest('dist/public_html/javascripts'))
 })
 
+gulp.task('copy-nodejs', function(){
+    return gulp.src(['node_modules', 'app.js','run.sh'])
+        .pipe(gulp.dest('dist'))
+})
 
 gulp.task('copy-resources', function(){
-    return gulp.src(['public_html/**/', '!public_html/javascripts/**'])
+    return gulp.src(['public_html/**/', '!public_html/javascripts/**', '!public_html/bower_components'])
         .pipe(gulp.dest('dist/public_html'))
 })
 
@@ -64,5 +68,5 @@ gulp.task('clean', function() {
 });
 
 gulp.task('build', function(){
-    return runSequence('clean', 'scripts', 'copy-resources', 'concat-vendor', 'revision','replace-min');
+    return runSequence('clean', 'scripts', 'copy-resources','copy-nodejs', 'concat-vendor', 'revision','replace-min');
 })
