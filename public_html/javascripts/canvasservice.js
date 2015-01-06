@@ -125,7 +125,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         }
 
         function syncClient(message){
-            SocketIoService.emit('syncClient', {clientId:message.clientId, canvas:JSON.stringify(canvas)});
+            SocketIoService.emit('syncClient', {clientId:message.clientId, canvas:JSON.stringify(FabricService.canvas())});
         }
 
         function updateCanvas(message){
