@@ -72,6 +72,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
+            //todo: when sending, do full clear to canvas. So this needs separate function/stream
             SocketIoService.emit('addObject', fabricObjectJson);
             attachCommonListeners(fabricObject);
         }
@@ -176,7 +177,6 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
                 attachCommonListeners(fabricObject);
             } else if (fabricObject.type === 'group') {
 
-                //todo: fix bug when other canvas has group selected and another also.. then moving duoplicates
                 var toRemove = [];
                 fabricObject._objects.forEach(function (element) {
                     toRemove.push(FabricService.findObjectFromCanvasWith(element.objectId));
@@ -193,7 +193,6 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             fabric.util.enlivenObjects([jsonObject], function(objects){
                 var origRenderOnAddRemove = FabricService.canvas().renderOnAddRemove;
                 FabricService.canvas().renderOnAddRemove = false;
-
                 objects.forEach(function(fabricObject) {
                     attachFabricObjectListeners(fabricObject);
 
