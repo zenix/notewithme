@@ -9,8 +9,22 @@ var del = require('del');
 var mainBowerFiles = require('main-bower-files');
 var gulpFilter = require('gulp-filter');
 var ngAnnotate = require('gulp-ng-annotate');
+var through = require('through2');
+var fs = require('fs');
 
+var rmOrig = function() {
+  return through.obj(function(file, enc, cb) {
 
+    if (file.revOrigPath) {
+      fs.unlink(file.revOrigPath, function(err) {
+        // TODO: emit an error if err
+      });
+    }
+
+    this.push(file); // Pass file when you're done
+    return cb() // notify through2 you're done
+  });
+};
 //todo: cleanup javascripts / bower_components
 // bootsrap-modal only
 gulp.task('scripts', function() {
@@ -27,6 +41,7 @@ gulp.task('revision', function(){
     return gulp.src('dist/public_html/javascripts/*.js')
         .pipe(rev())
         .pipe(gulp.dest('dist/public_html/javascripts'))
+        .pipe(rmOrig())
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/public_html/javascripts'))
 })
@@ -76,6 +91,18 @@ gulp.task('clean', function() {
         .pipe(vinylPaths(del))
 });
 
+gulp.task('clean-tmp-files', function() {
+    return gulp.src(['dist/public_html/javascripts/notewithmeapplication.min.js', 'dist/public_html/javascripts/vendor.min.js'])
+        .pipe(vinylPaths(del))
+});
+
+gulp.task('clean-tmp-files', function() {
+    return gulp.src(['dist/public_html/javascripts/notewithmeapplication.min.js', 'dist/public_html/javascripts/vendor.min.js'])
+        .pipe(vinylPaths(del))
+});
+
 gulp.task('build', function(){
-    return runSequence('clean', 'scripts', 'copy-resources','copy-nodejs', 'concat-vendor','scripts-concat', 'revision','replace-min');
+    return runSequence('clean', 'scripts', 'copy-resources','copy-nodejs', 'concat-vendor','scripts-concat', 'clean-tmp-files', 'revision','replace-min');
 })
+
+

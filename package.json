@@ -17,15 +17,18 @@
   },
   "devDependencies": {
     "del": "^1.1.1",
+    "fs": "0.0.2",
     "gulp": "^3.8.10",
     "gulp-concat": "^2.4.2",
     "gulp-filter": "^2.0.0",
+    "gulp-html-replace": "^1.4.1",
     "gulp-ng-annotate": "^0.4.3",
     "gulp-rev": "^2.0.1",
     "gulp-uglify": "^1.0.2",
     "main-bower-files": "^2.4.1",
     "protractor": "^1.5.0",
     "run-sequence": "^1.0.2",
+    "through2": "^0.6.3",
     "vinyl-paths": "^1.0.0"
   }
 }
