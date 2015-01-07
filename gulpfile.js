@@ -25,7 +25,7 @@ var rmOrig = function() {
     return cb() // notify through2 you're done
   });
 };
-//todo: cleanup javascripts / bower_components
+
 // bootsrap-modal only
 gulp.task('scripts', function() {
     return gulp.src('public_html/javascripts/*.js')
@@ -52,7 +52,7 @@ gulp.task('copy-nodejs', function(){
 })
 
 gulp.task('copy-resources', function(){
-    return gulp.src(['public_html/**/', '!public_html/javascripts/**', '!public_html/bower_components'])
+    return gulp.src(['public_html/**/', '!public_html/javascripts/**', '!public_html/bower_components/', '!public_html/bower_components/**'])
         .pipe(gulp.dest('dist/public_html'))
 })
 
