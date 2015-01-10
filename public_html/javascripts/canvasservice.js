@@ -72,7 +72,8 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
-            //todo: when sending, do full clear to canvas. So this needs separate function/stream
+            //todo: when selecting multiple, position might be incorrect in clients
+            //todo: sometimes duplication when moving
             SocketIoService.emit('addObject', fabricObjectJson);
             attachCommonListeners(fabricObject);
         }
