@@ -100,7 +100,9 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
 
 
         function attachListenersToText(iText){
+            console.log("attached")
             iText.on('text:changed', function(event){
+                console.log("sending")
                 SocketIoService.emit('writing', {'objectId':iText.objectId,'text':iText.text});
             });
             attachCommonListeners(iText);
@@ -135,6 +137,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         }
 
         function writing(message){
+            console.log("moi")
             var object = FabricService.findObjectFromCanvasWith(message.objectId);
             object.text = message.text;
             FabricService.canvas().renderAll();
@@ -194,12 +197,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
                 var origRenderOnAddRemove = FabricService.canvas().renderOnAddRemove;
                 FabricService.canvas().renderOnAddRemove = false;
                 objects.forEach(function(fabricObject) {
-                    var objectToRemove = FabricService.findObjectFromCanvasWith(fabricObject.objectId);
-                    if(objectToRemove){
-                        FabricService.canvas().remove(objectToRemove);
-                    }
                     attachFabricObjectListeners(fabricObject);
-
                     FabricService.canvas().add(fabricObject);
                 });
 
