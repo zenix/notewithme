@@ -100,9 +100,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
 
 
         function attachListenersToText(iText){
-            console.log("attached")
-            iText.on('text:changed', function(event){
-                console.log("sending")
+            iText.on('changed', function(event){
                 SocketIoService.emit('writing', {'objectId':iText.objectId,'text':iText.text});
             });
             attachCommonListeners(iText);
