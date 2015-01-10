@@ -194,6 +194,10 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
                 var origRenderOnAddRemove = FabricService.canvas().renderOnAddRemove;
                 FabricService.canvas().renderOnAddRemove = false;
                 objects.forEach(function(fabricObject) {
+                    var objectToRemove = FabricService.findObjectFromCanvasWith(fabricObject.objectId);
+                    if(objectToRemove){
+                        FabricService.canvas().remove(objectToRemove);
+                    }
                     attachFabricObjectListeners(fabricObject);
 
                     FabricService.canvas().add(fabricObject);
