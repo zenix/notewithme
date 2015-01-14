@@ -6,6 +6,7 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
         canvas = new fabric.Canvas('mainCanvas');
         canvas.setWidth($window.innerWidth);
         canvas.setHeight($window.innerHeight);
+        canvas.selection = false;
         canvas.calcOffset();
     }
 
@@ -45,6 +46,9 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
             }
             return false;
         })[0];
+    }
+    this.findObjects = function(){
+        return canvas.getObjects();
     }
 
     this.selectionCreated = function(fn){

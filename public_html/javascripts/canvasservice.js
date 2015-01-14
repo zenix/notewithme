@@ -72,6 +72,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
+            console.log(fabricObjectJson);
             //todo: when selecting multiple, position might be incorrect in clients
             //todo: sometimes duplication when moving
             SocketIoService.emit('addObject', fabricObjectJson);
@@ -108,6 +109,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         }
 
         function attachCommonListeners(fabricObject){
+
             fabricObject.on('moving', function(event){
                 SocketIoService.emit('moving', {'objectId':fabricObject.objectId,'left': fabricObject.left, 'top': fabricObject.top,'originX': fabricObject.originX, 'originY':fabricObject.originY})
             });
@@ -132,11 +134,13 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
 
         function updateCanvas(message){
             FabricService.canvas().loadFromJSON(message.canvas);
+            FabricService.findObjects().forEach(function(fabricObject){
+                attachFabricObjectListeners(fabricObject);
+            });
             FabricService.canvas().renderAll();
         }
 
         function writing(message){
-            console.log("moi")
             var object = FabricService.findObjectFromCanvasWith(message.objectId);
             object.text = message.text;
             FabricService.canvas().renderAll();
