@@ -1,6 +1,7 @@
 'use strict';
 
 nwmApplication.controller('mainController', ['$scope','$location','UserService', function($scope, $location,UserService){
+    ga('send', 'event', 'User Path', 'Main Page', 'Load');
     $scope.start = function(user){
         UserService.user().name = user.name;
         UserService.user().room = user.room;
