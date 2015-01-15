@@ -6,9 +6,18 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
         $scope.modal = {};
         $scope.modal.show = true;
         $scope.modal.title = 'Please fill name and you\'re free to go.';
+        trackOpenLinkModal();
         watchModalSubmit();
     }else{
         start();
+    }
+
+    function trackOpenLinkModal(){
+       ga('send', 'event', 'User Path', 'Link', 'Modal');
+    }
+
+    function trackStartFromLink(){
+       ga('send', 'event', 'User Path', 'Link Modal', 'Start');
     }
 
     function start(){
@@ -42,6 +51,7 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
             if (newValue) {
                 UserService.user().name = newValue.name;
                 UserService.user().room = $routeParams.roomName;
+                trackStartFromLink();
                 start();
             }
         })
