@@ -35,6 +35,21 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
         return iText;
     }
 
+    this.createRect = function(options){
+        var rect = new fabric.Rect({
+            left: options.e.offsetX ? options.e.offsetX : options.e.layerX,
+            top: options.e.offsetY ? options.e.offsetY : options.e.layerY,
+            fill: '',
+            stroke:'#000000',
+            strokeWidth: 1,
+            width: 50,
+            height: 50
+        });
+
+        rect.objectId = Utils.guid();
+        return rect;
+    }
+
     this.canvas = function(){
         return canvas;
     }

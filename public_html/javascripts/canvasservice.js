@@ -5,8 +5,8 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: true, isDrawingMode: false},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, isDrawingMode: false},
-        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, isDrawingMode: false},
-        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, isDrawingMode: true}
+        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, isDrawingMode: true},
+        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, isDrawingMode: false}
     ];
 
     this.canvasTools = function() {
@@ -90,18 +90,27 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
 
         function mouseDown(options){
             if (!options.target && self.findActiveCanvasTool().name === 'Write') {
-                self.setActiveCanvasTool('None');
                 var iText = FabricService.createItext(options);
-                var iTextJson = JSON.stringify(iText);
-                SocketIoService.emit('addObject', iTextJson);
+                createAndSyncFrom(iText);
                 attachListenersToText(iText);
-                FabricService.canvas().calcOffset();
-                FabricService.canvas().add(iText);
-                FabricService.canvas().setActiveObject(iText);
                 iText.enterEditing();
                 iText.selectionStart = 0;
                 iText.selectionEnd = iText.text.length;
-                FabricService.canvas().renderAll();
+            }else if(!options.target && self.findActiveCanvasTool().name === 'Rectangle'){
+                var rect = FabricService.createRect(options);
+                createAndSyncFrom(rect);
+                attachCommonListeners(rect);
+            }
+
+            self.setActiveCanvasTool('None');
+            FabricService.canvas().renderAll();
+
+            function createAndSyncFrom(fabricObject){
+                var json = JSON.stringify(fabricObject);
+                SocketIoService.emit('addObject', json);
+                FabricService.canvas().calcOffset();
+                FabricService.canvas().add(fabricObject);
+                FabricService.canvas().setActiveObject(fabricObject);
             }
         }
 
