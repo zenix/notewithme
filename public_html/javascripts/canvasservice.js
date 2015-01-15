@@ -96,6 +96,10 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
                 attachListenersToText(iText);
                 FabricService.canvas().calcOffset();
                 FabricService.canvas().add(iText);
+                FabricService.canvas().setActiveObject(iText);
+                iText.enterEditing();
+                iText.selectionStart = 0;
+                iText.selectionEnd = iText.text.length;
                 FabricService.canvas().renderAll();
             }
         }
