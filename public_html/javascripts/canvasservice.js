@@ -193,7 +193,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         function attachFabricObjectListeners(fabricObject) {
             if (fabricObject.type === 'i-text') {
                 attachListenersToText(fabricObject);
-            } else if (fabricObject.type === 'path') {
+            } else if (fabricObject.type === 'path' || fabricObject.type === 'rect') {
                 attachCommonListeners(fabricObject);
             } else if (fabricObject.type === 'group') {
 
