@@ -5,7 +5,8 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: true, isDrawingMode: false},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, isDrawingMode: false},
-        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, isDrawingMode: true}
+        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, isDrawingMode: false},
+        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, isDrawingMode: true}
     ];
 
     this.canvasTools = function() {
