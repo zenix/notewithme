@@ -4,8 +4,8 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
 
     this.createCanvas = function() {
         canvas = new fabric.Canvas('mainCanvas');
-        canvas.setWidth($window.innerWidth);
-        canvas.setHeight($window.innerHeight);
+        canvas.setWidth($window.innerWidth - 39);
+        canvas.setHeight($window.innerHeight - 39);
         canvas.selection = false;
         canvas.calcOffset();
     }
