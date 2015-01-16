@@ -95,7 +95,6 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         return canvasToolOptions;
     }
 
-    //todo
     this.findActiveCanvasTool = function(){
         return canvasToolOptions.filter(function(tool){
             if(tool.active){
@@ -104,7 +103,6 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             return false;
         })[0];
     }
-    //todo
     this.findCanvasTool = function(name){
         return canvasToolOptions.filter(function(tool){
             if(tool.name === name ){
