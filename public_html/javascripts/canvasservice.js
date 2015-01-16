@@ -5,7 +5,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'None', glyphiconicon: 'glyphicon-off', active: true, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
         {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw},
-        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect}
+        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect},
+        {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-down', active: false, fn: canvasToolArrow}
     ];
 
     function canvasToolNone() {
@@ -52,6 +53,20 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             var fabricObjectJson = JSON.stringify(fabricObject);
             SocketIoService.emit('addObject', fabricObjectJson);
             attachCommonListeners(fabricObject)
+        }
+    }
+
+    function canvasToolArrow(){
+        FabricService.mouseDown(createArrow);
+
+        function createArrow(options){
+            if (!options.target) {
+                var arrow = FabricService.createArrow(options);
+                createAndSyncFrom(arrow);
+                attachCommonListeners(arrow);
+                self.setActiveCanvasTool('None');
+                FabricService.canvas().renderAll();
+            }
         }
     }
 

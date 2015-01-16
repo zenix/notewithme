@@ -42,6 +42,17 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         rect.objectId = Utils.guid();
         return rect;
     }
+    this.createArrow = function(options){
+        var path = new fabric.Path('M 0 0 L 50 0 M 0 0 L 4 -3 M 0 0 L 4 3 z', {
+            left: options.e.offsetX ? options.e.offsetX : options.e.layerX,
+            top: options.e.offsetY ? options.e.offsetY : options.e.layerY,
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: false
+        });
+        path.objectId = Utils.guid();
+        return path;
+    }
     this.canvas = function () {
         return canvas;
     }
