@@ -1,26 +1,23 @@
 'use strict';
-
-nwmApplication.controller('roomController', ['$scope', '$location', '$routeParams', '$compile', '$window', 'SocketIoService','UserService','CanvasService', function($scope, $location, $routeParams, $compile, $window, SocketIoService, UserService,CanvasService){
-
-    if(UserService.isEmpty()){
+nwmApplication.controller('roomController', ['$scope', '$location', '$routeParams', '$compile', '$window', 'SocketIoService', 'UserService', 'CanvasService', function ($scope, $location, $routeParams, $compile, $window, SocketIoService, UserService, CanvasService) {
+    if (UserService.isEmpty()) {
         $scope.modal = {};
         $scope.modal.show = true;
         $scope.modal.title = 'Please fill name and you\'re free to go.';
         trackOpenLinkModal();
         watchModalSubmit();
-    }else{
+    } else {
         start();
     }
-
-    function trackOpenLinkModal(){
-       ga('send', 'event', 'User Path', 'Link', 'Modal');
+    function trackOpenLinkModal() {
+        ga('send', 'event', 'User Path', 'Link', 'Modal');
     }
 
-    function trackStartFromLink(){
-       ga('send', 'event', 'User Path', 'Link Modal', 'Start');
+    function trackStartFromLink() {
+        ga('send', 'event', 'User Path', 'Link Modal', 'Start');
     }
 
-    function start(){
+    function start() {
         initializeCanvasToolOptions();
         watchCanvasToolModel();
         CanvasService.start($scope);
@@ -28,8 +25,7 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
 
     function initializeCanvasToolOptions() {
         $scope.canvasToolOptions = CanvasService.canvasTools();
-        $scope.canvasToolModel =  CanvasService.findActiveCanvasTool().name;
-
+        $scope.canvasToolModel = CanvasService.findActiveCanvasTool().name;
     }
 
     function watchCanvasToolModel() {
@@ -39,8 +35,8 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
         });
     }
 
-    function watchCanvasToolsService(){
-        $scope.$watch(function(){ return CanvasService.canvasTools()}, function(newState, oldState){
+    function watchCanvasToolsService() {
+        $scope.$watch(function () { return CanvasService.canvasTools()}, function (newState, oldState) {
             $scope.canvasToolModel = findActiveCanvasTool().name;
             $scope.$apply();
         }, true);

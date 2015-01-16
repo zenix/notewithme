@@ -1,8 +1,6 @@
 'use strict';
-
 var nwmApplication = angular.module('notewithme', ['ngRoute']);
-
-nwmApplication.config(['$routeProvider', function($routeProvider) {
+nwmApplication.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/room/:roomName', {
             templateUrl: 'partials/room.html',

@@ -1,6 +1,6 @@
 'use strict';
-nwmApplication.service('Utils',[function () {
-    this.guid = function() {
+nwmApplication.service('Utils', [function () {
+    this.guid = function () {
         function randomString() {
             return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)

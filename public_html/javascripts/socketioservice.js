@@ -1,47 +1,37 @@
 'use strict';
-
-nwmApplication.service('SocketIoService',function () {
+nwmApplication.service('SocketIoService', function () {
         var socket = io();
-        this.joinRoom = function(user){
-            socket.emit('joinRoom',user);
+        this.joinRoom = function (user) {
+            socket.emit('joinRoom', user);
         }
-        this.socket = function(){
+        this.socket = function () {
             return socket;
         }
-
-        this.emit = function(action, message){
+        this.emit = function (action, message) {
             socket.emit(action, message);
         }
-
-        this.reconnect = function(fn){
+        this.reconnect = function (fn) {
             socket.on('connect', fn);
         }
-
-        this.syncClient = function(fn){
+        this.syncClient = function (fn) {
             socket.on('syncClient', fn);
         }
-
-        this.updateCanvas = function(fn){
+        this.updateCanvas = function (fn) {
             socket.on('updateCanvas', fn);
         }
-
-        this.writing = function(fn){
+        this.writing = function (fn) {
             socket.on('writing', fn);
         }
-
-        this.moving = function(fn){
+        this.moving = function (fn) {
             socket.on('moving', fn);
         }
-
-        this.rotating = function(fn){
+        this.rotating = function (fn) {
             socket.on('rotating', fn);
         }
-
-        this.scaling = function(fn){
+        this.scaling = function (fn) {
             socket.on('scaling', fn);
         }
-
-        this.addObject = function(fn) {
+        this.addObject = function (fn) {
             socket.on('addObject', fn);
         }
     }

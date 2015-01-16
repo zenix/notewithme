@@ -1,15 +1,13 @@
 'use strict';
-nwmApplication.service('FabricService', ['$window','Utils',function ($window, Utils) {
+nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, Utils) {
     var canvas;
-
-    this.createCanvas = function() {
+    this.createCanvas = function () {
         canvas = new fabric.Canvas('mainCanvas');
         canvas.setWidth($window.innerWidth - 39);
         canvas.setHeight($window.innerHeight - 39);
         canvas.selection = false;
         canvas.calcOffset();
     }
-
     this.addObjectIdToPrototype = function () {
         fabric.Object.prototype.toObject = (function (toObject) {
             return function () {
@@ -19,10 +17,8 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
             };
         })(fabric.Object.prototype.toObject);
     }
-
-
-    this.createItext = function(options){
-        var iText = new fabric.IText('edit',{
+    this.createItext = function (options) {
+        var iText = new fabric.IText('edit', {
             left: options.e.offsetX ? options.e.offsetX : options.e.layerX,
             top: options.e.offsetY ? options.e.offsetY : options.e.layerY,
             backgroundColor: '#FFFFFF',
@@ -30,31 +26,26 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
             fontSize: '14',
             fontFamily: 'Arial'
         });
-
         iText.objectId = Utils.guid();
         return iText;
     }
-
-    this.createRect = function(options){
+    this.createRect = function (options) {
         var rect = new fabric.Rect({
             left: options.e.offsetX ? options.e.offsetX : options.e.layerX,
             top: options.e.offsetY ? options.e.offsetY : options.e.layerY,
             fill: '',
-            stroke:'#000000',
+            stroke: '#000000',
             strokeWidth: 1,
             width: 50,
             height: 50
         });
-
         rect.objectId = Utils.guid();
         return rect;
     }
-
-    this.canvas = function(){
+    this.canvas = function () {
         return canvas;
     }
-
-    this.findObjectFromCanvasWith = function(objectId){
+    this.findObjectFromCanvasWith = function (objectId) {
         return canvas.getObjects().filter(function (object) {
             if (object.objectId === objectId) {
                 return true;
@@ -62,31 +53,25 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
             return false;
         })[0];
     }
-    this.findObjects = function(){
+    this.findObjects = function () {
         return canvas.getObjects();
     }
-
-    this.selectionCreated = function(fn){
+    this.selectionCreated = function (fn) {
         canvas.on('selection:created', fn);
     }
-
-    this.pathCreated = function(fn){
+    this.pathCreated = function (fn) {
         canvas.on('path:created', fn);
     }
-
-    this.mouseDown =  function(fn){
+    this.mouseDown = function (fn) {
         canvas.on('mouse:down', fn);
     }
-
-    this.removeSelectionCreated = function(fn){
+    this.removeSelectionCreated = function (fn) {
         canvas.off('selection:created');
     }
-
-    this.removePathCreated = function(fn){
+    this.removePathCreated = function (fn) {
         canvas.off('path:created');
     }
-
-    this.removeMouseDown =  function(fn){
+    this.removeMouseDown = function (fn) {
         canvas.off('mouse:down');
     }
 }]);

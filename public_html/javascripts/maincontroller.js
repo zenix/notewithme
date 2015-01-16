@@ -1,19 +1,17 @@
 'use strict';
-
-nwmApplication.controller('mainController', ['$scope','$location','UserService', function($scope, $location,UserService){
+nwmApplication.controller('mainController', ['$scope', '$location', 'UserService', function ($scope, $location, UserService) {
     ga('send', 'event', 'User Path', 'Main Page', 'Load');
-    $scope.start = function(user){
+    $scope.start = function (user) {
         UserService.user().name = user.name;
         UserService.user().room = user.room;
         trackStart();
-        $location.path('/room/'+user.room);
+        $location.path('/room/' + user.room);
     }
-
-    function trackStart(){
+    function trackStart() {
         ga('send', 'event', 'User Path', 'Modal', 'Start');
     }
 
-    $scope.trackModal = function(){
+    $scope.trackModal = function () {
         ga('send', 'event', 'User Path', 'Main Page', 'Open Modal');
     }
 }]);
