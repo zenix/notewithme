@@ -1,7 +1,6 @@
 'use strict';
 nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService) {
     var self = this;
-    var copiedObject;
     var copiedObjects = new Array();
 
     var canvasToolOptions = [
@@ -247,21 +246,11 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     }
 
     function onKeyDownHandler(event) {
-        //event.preventDefault();
-        console.log("moi")
         var key;
-        if(window.event){
-            key = window.event.keyCode;
-        }
-        else{
-            key = event.keyCode;
-        }
+        if(window.event){ key = window.event.keyCode; }
+        else{ key = event.keyCode;}
 
         switch(key){
-            //////////////
-            // Shortcuts
-            //////////////
-            // Copy (Ctrl+C)
             case 67: // Ctrl+C
                 if(ableToShortcut()){
                     if(event.ctrlKey){
@@ -270,7 +259,6 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
                     }
                 }
                 break;
-            // Paste (Ctrl+V)
             case 86: // Ctrl+V
                 if(ableToShortcut()){
                     if(event.ctrlKey){
@@ -301,33 +289,31 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     }
 
     function copy(){
-        if(canvas.getActiveGroup()){
-            for(var i in canvas.getActiveGroup().objects){
-                var object = fabric.util.object.clone(canvas.getActiveGroup().objects[i]);
+        /*if(FabricService.canvas().getActiveGroup()){
+            for(var i in FabricService.canvas().getActiveGroup().objects){
+                var object = fabric.util.object.clone(FabricService.canvas().getActiveGroup().objects[i]);
                 object.set("top", object.top+5);
                 object.set("left", object.left+5);
                 copiedObjects[i] = object;
             }
         }
-        else if(canvas.getActiveObject()){
-            var object = fabric.util.object.clone(canvas.getActiveObject());
-            object.set("top", object.top+5);
-            object.set("left", object.left+5);
-            copiedObject = object;
-            copiedObjects = new Array();
+        */
+        if(FabricService.canvas().getActiveObject()){
+            copiedObjects[0] = FabricService.canvas().getActiveObject();
         }
     }
 
     function paste(){
         if(copiedObjects.length > 0){
-            for(var i in copiedObjects){
-                canvas.add(copiedObjects[i]);
-            }
+            copiedObjects.forEach(function(fabricObject){
+                fabricObject.set("top", fabricObject.top + 20);
+                fabricObject.set("left", fabricObject.left + 20);
+                var clonedFabricObject = fabric.util.object.clone(fabricObject);
+                clonedFabricObject.objectId = Utils.guid();
+                FabricService.canvas().add(clonedFabricObject);
+            })
         }
-        else if(copiedObject){
-            canvas.add(copiedObject);
-        }
-        canvas.renderAll();
+        FabricService.canvas().renderAll();
     }
 
 }])
