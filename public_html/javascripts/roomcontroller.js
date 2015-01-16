@@ -21,25 +21,27 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
     function start() {
         initializeCanvasToolOptions();
         watchCanvasToolModel();
+       // watchCanvasToolsService();
         CanvasService.start($scope);
     }
 
     function initializeCanvasToolOptions() {
         $scope.canvasToolOptions = CanvasService.canvasTools();
-        $scope.canvasToolModel = CanvasService.findActiveCanvasTool().name;
+        //$scope.canvasToolModel = CanvasService.findActiveCanvasTool().name;
     }
 
     function watchCanvasToolModel() {
         $scope.$watch('canvasToolModel', function (newState, oldState) {
-            CanvasService.setActiveCanvasTool(newState.name);
-            CanvasService.calculateOffset();
+            if(newState) {
+                CanvasService.setActiveCanvasTool(newState.name);
+                CanvasService.calculateOffset();
+            }
         });
     }
 
     function watchCanvasToolsService() {
-        $scope.$watch(function () { return CanvasService.canvasTools()}, function (newState, oldState) {
-            $scope.canvasToolModel = findActiveCanvasTool().name;
-            $scope.$apply();
+        $scope.$watch(function () { return CanvasService.canvasTools()}, function () {
+            $scope.canvasToolModel = CanvasService.findActiveCanvasTool().name;
         }, true);
     }
 

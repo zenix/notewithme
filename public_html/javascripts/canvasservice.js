@@ -4,7 +4,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     var copiedObjects = new Array();
     var pastecount = 20;
     var canvasToolOptions = [
-        {name: 'None', glyphiconicon: 'glyphicon-off', active: true, fn: canvasToolNone},
+        {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
         {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw},
         {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect},
@@ -124,10 +124,12 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     }
     this.setActiveCanvasTool = function (name) {
         var activeCanvasTool = this.findActiveCanvasTool();
-        if (!name || activeCanvasTool.name === name) {
-            return;
+        if(activeCanvasTool) {
+            if (!name || activeCanvasTool.name === name) {
+                return;
+            }
+            activeCanvasTool.active = false;
         }
-        activeCanvasTool.active = false;
         var tool = this.findCanvasTool(name);
         tool.active = true;
         tool.fn();
@@ -187,15 +189,12 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
 
         function updateFabricObject(message) {
-           // console.log(message);
             var object = FabricService.findObjectFromCanvasWith(message.objectId);
             setFabricObjectInfoAndRender(object, message);
             FabricService.canvas().renderAll();
         }
 
         function setFabricObjectInfoAndRender(fabricObject, message) {
-            //console.log(message);
-            //console.log(fabricObject);
             fabricObject.angle = message.angle;
             fabricObject.scaleX = message.scaleX;
             fabricObject.scaleY = message.scaleY;
