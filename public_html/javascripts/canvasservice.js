@@ -23,7 +23,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if (!options.target) {
                 var iText = FabricService.createItext(options);
                 createAndSyncFrom(iText);
-                attachListenersToText(iText);
+                attachCommonListeners(iText);
                 iText.enterEditing();
                 iText.selectionStart = 0;
                 iText.selectionEnd = iText.text.length;
@@ -80,19 +80,28 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         FabricService.canvas().setActiveObject(fabricObject);
     }
 
-    function attachListenersToText(iText) {
-        iText.on('changed', function (event) {
-            SocketIoService.emit('writing', {'objectId': iText.objectId, 'text': iText.text});
-        });
-        attachCommonListeners(iText);
-    }
+    function attachCommonListeners(fabricObjectToAttach) {
+        fabricObjectToAttach.on('moving', movingMessage);
+        fabricObjectToAttach.on('rotating', rotatingObject);
+        fabricObjectToAttach.on('scaling', scalingObject);
 
-    function attachCommonListeners(fabricObject) {
-        fabricObject.on('moving', sendObjectInformation);
-        fabricObject.on('rotating', sendObjectInformation);
-        fabricObject.on('scaling', sendObjectInformation);
-        function sendObjectInformation(event) {
-            SocketIoService.emit('scaling', {'objectId': fabricObject.objectId, 'angle': fabricObject.angle, 'originX': fabricObject.originX, 'originY': fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY': fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
+        if(fabricObjectToAttach.type === 'i-text' ){
+            fabricObjectToAttach.on('changed', function (event) {
+                SocketIoService.emit('writing', {'objectId': fabricObjectToAttach.objectId, 'text': fabricObjectToAttach.text});
+            });
+        }
+        function movingMessage(event) {
+            SocketIoService.emit('moving',createMessage(fabricObjectToAttach));
+        }
+        function rotatingObject(event) {
+            SocketIoService.emit('rotating',createMessage(fabricObjectToAttach));
+        }
+        function scalingObject(event) {
+            SocketIoService.emit('scaling',createMessage(fabricObjectToAttach));
+        }
+
+        function createMessage(fabricObject){
+            return {'objectId': fabricObject.objectId, 'angle': fabricObject.angle, 'originX': fabricObject.originX, 'originY': fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY': fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top};
         }
     }
 
@@ -190,11 +199,11 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
 
         function updateFabricObject(message) {
             var object = FabricService.findObjectFromCanvasWith(message.objectId);
-            setFabricObjectInfoAndRender(object, message);
+            setFabricObjectInfo(object, message);
             FabricService.canvas().renderAll();
         }
 
-        function setFabricObjectInfoAndRender(fabricObject, message) {
+        function setFabricObjectInfo(fabricObject, message) {
             fabricObject.angle = message.angle;
             fabricObject.scaleX = message.scaleX;
             fabricObject.scaleY = message.scaleY;
@@ -205,11 +214,9 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
 
         function attachFabricObjectListeners(fabricObject) {
-            if (fabricObject.type === 'i-text') {
-                attachListenersToText(fabricObject);
-            } else if (fabricObject.type === 'path' || fabricObject.type === 'rect') {
-                attachCommonListeners(fabricObject);
-            } else if (fabricObject.type === 'group') {
+            attachCommonListeners(fabricObject);
+
+            /*if (fabricObject.type === 'group') {
                 var toRemove = [];
                 fabricObject._objects.forEach(function (element) {
                     toRemove.push(FabricService.findObjectFromCanvasWith(element.objectId));
@@ -218,7 +225,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
                     FabricService.canvas().remove(element);
                 });
                 attachCommonListeners(fabricObject);
-            }
+            }*/
         }
 
         function addObject(message) {
@@ -319,7 +326,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     function paste(){
         if(copiedObjects.length > 0){
             copiedObjects.forEach(function(fabricObject){
-                var clonedFabricObject = fabric.util.object.clone(fabricObject);
+                var clonedFabricObject = fabricObject.clone();
                 clonedFabricObject.set("top", fabricObject.top + pastecount);
                 clonedFabricObject.set("left", fabricObject.left + pastecount);
                 pastecount = pastecount + 20;
