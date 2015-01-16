@@ -77,4 +77,16 @@ nwmApplication.service('FabricService', ['$window','Utils',function ($window, Ut
     this.mouseDown =  function(fn){
         canvas.on('mouse:down', fn);
     }
+
+    this.removeSelectionCreated = function(fn){
+        canvas.off('selection:created');
+    }
+
+    this.removePathCreated = function(fn){
+        canvas.off('path:created');
+    }
+
+    this.removeMouseDown =  function(fn){
+        canvas.off('mouse:down');
+    }
 }]);

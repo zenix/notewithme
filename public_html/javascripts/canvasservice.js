@@ -3,16 +3,99 @@
 nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoService','UserService','Utils','FabricService', function($routeParams, $window, SocketIoService,UserService, Utils, FabricService){
     var self = this;
     var canvasToolOptions = [
-        {name: 'None', glyphiconicon: 'glyphicon-off', active: true, isDrawingMode: false},
-        {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, isDrawingMode: false},
-        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, isDrawingMode: true},
-        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, isDrawingMode: false}
+        {name: 'None', glyphiconicon: 'glyphicon-off', active: true, fn:canvasToolNone},
+        {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
+        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw},
+        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect}
     ];
+
+    function canvasToolNone(){
+        FabricService.canvas().isDrawingMode = false;
+        FabricService.removeMouseDown();
+        FabricService.removePathCreated();
+    }
+
+    function canvasToolWrite(){
+        FabricService.mouseDown(iTextMouseDown);
+
+        function iTextMouseDown(options) {
+            if(!options.target) {
+                var iText = FabricService.createItext(options);
+                createAndSyncFrom(iText);
+                attachListenersToText(iText);
+                iText.enterEditing();
+                iText.selectionStart = 0;
+                iText.selectionEnd = iText.text.length;
+                self.setActiveCanvasTool('None');
+                FabricService.canvas().renderAll();
+            }
+        }
+    }
+
+    function canvasToolRect(){
+        FabricService.mouseDown(rectMouseDown);
+
+        function rectMouseDown(options){
+            if(!options.target) {
+                var rect = FabricService.createRect(options);
+                createAndSyncFrom(rect);
+                attachCommonListeners(rect);
+                self.setActiveCanvasTool('None');
+                FabricService.canvas().renderAll();
+            }
+        }
+    }
+
+    function canvasToolDraw(){
+        FabricService.canvas().isDrawingMode = true;
+        FabricService.pathCreated(drawPath);
+
+        function drawPath(options){
+            var fabricObject = options.path;
+            fabricObject.objectId = Utils.guid();
+            var fabricObjectJson = JSON.stringify(fabricObject);
+            SocketIoService.emit('addObject', fabricObjectJson);
+            attachCommonListeners(fabricObject)
+        }
+    }
+
+
+    function createAndSyncFrom(fabricObject){
+        var json = JSON.stringify(fabricObject);
+        SocketIoService.emit('addObject', json);
+        FabricService.canvas().calcOffset();
+        FabricService.canvas().add(fabricObject);
+        FabricService.canvas().setActiveObject(fabricObject);
+    }
+
+    function attachListenersToText(iText){
+       iText.on('changed', function(event){
+           SocketIoService.emit('writing', {'objectId':iText.objectId,'text':iText.text});
+       });
+       attachCommonListeners(iText);
+    }
+
+   function attachCommonListeners(fabricObject){
+
+       fabricObject.on('moving', function(event){
+           SocketIoService.emit('moving', {'objectId':fabricObject.objectId,'left': fabricObject.left, 'top': fabricObject.top,'originX': fabricObject.originX, 'originY':fabricObject.originY})
+       });
+
+       fabricObject.on('rotating', function(event){
+           SocketIoService.emit('rotating',{'objectId':fabricObject.objectId, 'angle':fabricObject.angle,'originX': fabricObject.originX, 'originY':fabricObject.originY, 'left': fabricObject.left, 'top': fabricObject.top});
+       });
+
+       fabricObject.on('scaling', function(event){
+           SocketIoService.emit('scaling', {'objectId': fabricObject.objectId, 'originX': fabricObject.originX, 'originY':fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY':fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
+       });
+   }
+
 
     this.canvasTools = function() {
         return canvasToolOptions;
     }
 
+    //todo
     this.findActiveCanvasTool = function(){
         return canvasToolOptions.filter(function(tool){
             if(tool.active){
@@ -21,7 +104,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             return false;
         })[0];
     }
-
+    //todo
     this.findCanvasTool = function(name){
         return canvasToolOptions.filter(function(tool){
             if(tool.name === name ){
@@ -39,7 +122,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         activeCanvasTool.active = false;
         var tool = this.findCanvasTool(name);
         tool.active = true;
-        FabricService.canvas().isDrawingMode = tool.isDrawingMode;
+        tool.fn();
     }
 
     this.isDrawingMode = function(value){
@@ -65,9 +148,7 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         SocketIoService.scaling(scaling);
         SocketIoService.addObject(addObject);
 
-        FabricService.pathCreated(pathCreated);
-        FabricService.selectionCreated(selectionCreated);
-        FabricService.mouseDown(mouseDown);
+        //FabricService.selectionCreated(selectionCreated);
 
         function selectionCreated(options){
             var fabricObject = options.target;
@@ -80,62 +161,6 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             attachCommonListeners(fabricObject);
         }
 
-        function pathCreated(options){
-            var fabricObject = options.path;
-            fabricObject.objectId = Utils.guid();
-            var fabricObjectJson = JSON.stringify(fabricObject);
-            SocketIoService.emit('addObject', fabricObjectJson);
-            attachCommonListeners(fabricObject)
-        }
-
-        function mouseDown(options){
-            if (!options.target && self.findActiveCanvasTool().name === 'Write') {
-                var iText = FabricService.createItext(options);
-                createAndSyncFrom(iText);
-                attachListenersToText(iText);
-                iText.enterEditing();
-                iText.selectionStart = 0;
-                iText.selectionEnd = iText.text.length;
-            }else if(!options.target && self.findActiveCanvasTool().name === 'Rectangle'){
-                var rect = FabricService.createRect(options);
-                createAndSyncFrom(rect);
-                attachCommonListeners(rect);
-            }
-
-            self.setActiveCanvasTool('None');
-            FabricService.canvas().renderAll();
-
-            function createAndSyncFrom(fabricObject){
-                var json = JSON.stringify(fabricObject);
-                SocketIoService.emit('addObject', json);
-                FabricService.canvas().calcOffset();
-                FabricService.canvas().add(fabricObject);
-                FabricService.canvas().setActiveObject(fabricObject);
-            }
-        }
-
-
-        function attachListenersToText(iText){
-            iText.on('changed', function(event){
-                SocketIoService.emit('writing', {'objectId':iText.objectId,'text':iText.text});
-            });
-            attachCommonListeners(iText);
-        }
-
-        function attachCommonListeners(fabricObject){
-
-            fabricObject.on('moving', function(event){
-                SocketIoService.emit('moving', {'objectId':fabricObject.objectId,'left': fabricObject.left, 'top': fabricObject.top,'originX': fabricObject.originX, 'originY':fabricObject.originY})
-            });
-
-            fabricObject.on('rotating', function(event){
-                SocketIoService.emit('rotating',{'objectId':fabricObject.objectId, 'angle':fabricObject.angle,'originX': fabricObject.originX, 'originY':fabricObject.originY, 'left': fabricObject.left, 'top': fabricObject.top});
-            });
-
-            fabricObject.on('scaling', function(event){
-                SocketIoService.emit('scaling', {'objectId': fabricObject.objectId, 'originX': fabricObject.originX, 'originY':fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY':fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
-            });
-        }
 
 
         function connect(){
