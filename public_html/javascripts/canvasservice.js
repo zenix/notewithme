@@ -1,6 +1,9 @@
 'use strict';
 nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService) {
     var self = this;
+    var copiedObject;
+    var copiedObjects = new Array();
+
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: true, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
@@ -130,6 +133,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         FabricService.canvas().calcOffset();
     }
     this.start = function ($scope) {
+        createListenersKeyboard();
         SocketIoService.joinRoom(UserService.user());
         FabricService.createCanvas();
         FabricService.addObjectIdToPrototype();
@@ -141,8 +145,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         SocketIoService.rotating(updateFabricObject);
         SocketIoService.scaling(updateFabricObject);
         SocketIoService.addObject(addObject);
+        SocketIoService.removeObject(removeObject);
         //FabricService.selectionCreated(selectionCreated);
         function selectionCreated(options) {
+
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
@@ -222,5 +228,106 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
                 FabricService.canvas().calcOffset();
             });
         }
+
+        function removeObject(message){
+            FabricService.removeObject(message.objectId);
+            FabricService.canvas().renderAll();
+        }
     }
+
+
+    function removeActiveObjectAndSync(){
+        var objectId = FabricService.removeActiveObject();
+        SocketIoService.emit('removbeObject', {objectId:objectId});
+        FabricService.canvas().renderAll();
+    }
+
+    function createListenersKeyboard() {
+        document.onkeydown = onKeyDownHandler;
+    }
+
+    function onKeyDownHandler(event) {
+        //event.preventDefault();
+        console.log("moi")
+        var key;
+        if(window.event){
+            key = window.event.keyCode;
+        }
+        else{
+            key = event.keyCode;
+        }
+
+        switch(key){
+            //////////////
+            // Shortcuts
+            //////////////
+            // Copy (Ctrl+C)
+            case 67: // Ctrl+C
+                if(ableToShortcut()){
+                    if(event.ctrlKey){
+                        event.preventDefault();
+                        copy();
+                    }
+                }
+                break;
+            // Paste (Ctrl+V)
+            case 86: // Ctrl+V
+                if(ableToShortcut()){
+                    if(event.ctrlKey){
+                        event.preventDefault();
+                        paste();
+                    }
+                }
+                break;
+            default:
+                // TODO
+                break;
+        }
+    }
+
+
+    function ableToShortcut(){
+        /*
+        TODO check all cases for this
+
+        if($("textarea").is(":focus")){
+            return false;
+        }
+        if($(":text").is(":focus")){
+            return false;
+        }
+        */
+        return true;
+    }
+
+    function copy(){
+        if(canvas.getActiveGroup()){
+            for(var i in canvas.getActiveGroup().objects){
+                var object = fabric.util.object.clone(canvas.getActiveGroup().objects[i]);
+                object.set("top", object.top+5);
+                object.set("left", object.left+5);
+                copiedObjects[i] = object;
+            }
+        }
+        else if(canvas.getActiveObject()){
+            var object = fabric.util.object.clone(canvas.getActiveObject());
+            object.set("top", object.top+5);
+            object.set("left", object.left+5);
+            copiedObject = object;
+            copiedObjects = new Array();
+        }
+    }
+
+    function paste(){
+        if(copiedObjects.length > 0){
+            for(var i in copiedObjects){
+                canvas.add(copiedObjects[i]);
+            }
+        }
+        else if(copiedObject){
+            canvas.add(copiedObject);
+        }
+        canvas.renderAll();
+    }
+
 }])

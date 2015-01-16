@@ -1,5 +1,6 @@
 'use strict';
 nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, Utils) {
+    var self = this;
     var canvas;
     this.createCanvas = function () {
         canvas = new fabric.Canvas('mainCanvas');
@@ -84,5 +85,14 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     }
     this.removeMouseDown = function (fn) {
         canvas.off('mouse:down');
+    }
+    this.removeActiveObject = function(){
+        var activeObject = self.canvas().getActiveObject();
+        self.canvas().remove(activeObject);
+        return activeObject.objectId;
+    }
+    this.removeObject = function(objectId){
+        var object = self.findObjectFromCanvasWith(objectId);
+        self.canvas().remove(object);
     }
 }]);

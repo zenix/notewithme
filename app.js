@@ -37,6 +37,7 @@ io.on('connection', function(socket){
     })
 
     addListener('addObject');
+    addListener('removeObject');
     addListener('writing');
     addListener('scaling');
     addListener('rotating');

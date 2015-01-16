@@ -34,5 +34,8 @@ nwmApplication.service('SocketIoService', function () {
         this.addObject = function (fn) {
             socket.on('addObject', fn);
         }
+        this.removeObject =  function (fn) {
+            socket.on('removeObject', fn);
+        }
     }
 );

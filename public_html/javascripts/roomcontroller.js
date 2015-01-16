@@ -9,6 +9,7 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
     } else {
         start();
     }
+
     function trackOpenLinkModal() {
         ga('send', 'event', 'User Path', 'Link', 'Modal');
     }
