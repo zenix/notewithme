@@ -2,7 +2,7 @@
 nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService) {
     var self = this;
     var copiedObjects = new Array();
-
+    var pastecount = 20;
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: true, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
@@ -306,11 +306,15 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     function paste(){
         if(copiedObjects.length > 0){
             copiedObjects.forEach(function(fabricObject){
-                fabricObject.set("top", fabricObject.top + 20);
-                fabricObject.set("left", fabricObject.left + 20);
                 var clonedFabricObject = fabric.util.object.clone(fabricObject);
+                clonedFabricObject.set("top", fabricObject.top + pastecount);
+                clonedFabricObject.set("left", fabricObject.left + pastecount);
+                pastecount = pastecount + 20;
                 clonedFabricObject.objectId = Utils.guid();
+                attachCommonListeners(clonedFabricObject);
                 FabricService.canvas().add(clonedFabricObject);
+                var json = JSON.stringify(clonedFabricObject);
+                SocketIoService.emit('addObject', json);
             })
         }
         FabricService.canvas().renderAll();
