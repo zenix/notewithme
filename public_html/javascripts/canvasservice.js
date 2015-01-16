@@ -96,6 +96,13 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
     }
 
+    function removeAllListeners(fabricObject){
+        fabricObject.off('moving');
+        fabricObject.off('rotating');
+        fabricObject.off('scaling');
+        fabricObject.off('changed');
+    }
+
     this.canvasTools = function () {
         return canvasToolOptions;
     }
@@ -151,7 +158,6 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
-            console.log(fabricObjectJson);
             //todo: when selecting multiple, position might be incorrect in clients
             //todo: sometimes duplication when moving
             SocketIoService.emit('addObject', fabricObjectJson);
@@ -181,12 +187,15 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
 
         function updateFabricObject(message) {
+           // console.log(message);
             var object = FabricService.findObjectFromCanvasWith(message.objectId);
             setFabricObjectInfoAndRender(object, message);
             FabricService.canvas().renderAll();
         }
 
         function setFabricObjectInfoAndRender(fabricObject, message) {
+            //console.log(message);
+            //console.log(fabricObject);
             fabricObject.angle = message.angle;
             fabricObject.scaleX = message.scaleX;
             fabricObject.scaleY = message.scaleY;
@@ -237,7 +246,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
 
     function removeActiveObjectAndSync(){
         var objectId = FabricService.removeActiveObject();
-        SocketIoService.emit('removbeObject', {objectId:objectId});
+        SocketIoService.emit('removeObject', {objectId:objectId});
         FabricService.canvas().renderAll();
     }
 
@@ -266,6 +275,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
                         paste();
                     }
                 }
+                break;
+            case 46: //delete
+                event.preventDefault();
+                removeActiveObjectAndSync();
                 break;
             default:
                 // TODO
@@ -312,6 +325,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
                 clonedFabricObject.set("left", fabricObject.left + pastecount);
                 pastecount = pastecount + 20;
                 clonedFabricObject.objectId = Utils.guid();
+                removeAllListeners(clonedFabricObject);
                 attachCommonListeners(clonedFabricObject);
                 FabricService.canvas().add(clonedFabricObject);
                 var json = JSON.stringify(clonedFabricObject);

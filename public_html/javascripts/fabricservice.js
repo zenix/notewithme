@@ -88,8 +88,9 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     }
     this.removeActiveObject = function(){
         var activeObject = self.canvas().getActiveObject();
+        var objectId = activeObject.objectId;
         self.canvas().remove(activeObject);
-        return activeObject.objectId;
+        return objectId;
     }
     this.removeObject = function(objectId){
         var object = self.findObjectFromCanvasWith(objectId);
