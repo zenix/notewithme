@@ -300,6 +300,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         */
         if(FabricService.canvas().getActiveObject()){
             copiedObjects[0] = FabricService.canvas().getActiveObject();
+            pastecount = 20;
         }
     }
 
