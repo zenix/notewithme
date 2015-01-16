@@ -77,19 +77,14 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
 
    function attachCommonListeners(fabricObject){
 
-       fabricObject.on('moving', function(event){
-           SocketIoService.emit('moving', {'objectId':fabricObject.objectId,'left': fabricObject.left, 'top': fabricObject.top,'originX': fabricObject.originX, 'originY':fabricObject.originY})
-       });
+       fabricObject.on('moving', sendObjectInformation);
+       fabricObject.on('rotating', sendObjectInformation);
+       fabricObject.on('scaling', sendObjectInformation);
 
-       fabricObject.on('rotating', function(event){
-           SocketIoService.emit('rotating',{'objectId':fabricObject.objectId, 'angle':fabricObject.angle,'originX': fabricObject.originX, 'originY':fabricObject.originY, 'left': fabricObject.left, 'top': fabricObject.top});
-       });
-
-       fabricObject.on('scaling', function(event){
-           SocketIoService.emit('scaling', {'objectId': fabricObject.objectId, 'originX': fabricObject.originX, 'originY':fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY':fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
-       });
+       function sendObjectInformation(event){
+           SocketIoService.emit('scaling', {'objectId': fabricObject.objectId, 'angle':fabricObject.angle,'originX': fabricObject.originX, 'originY':fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY':fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top});
+       }
    }
-
 
     this.canvasTools = function() {
         return canvasToolOptions;
@@ -141,9 +136,9 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
         SocketIoService.syncClient(syncClient);
         SocketIoService.updateCanvas(updateCanvas);
         SocketIoService.writing(writing);
-        SocketIoService.moving(moving);
-        SocketIoService.rotating(rotating);
-        SocketIoService.scaling(scaling);
+        SocketIoService.moving(updateFabricObject);
+        SocketIoService.rotating(updateFabricObject);
+        SocketIoService.scaling(updateFabricObject);
         SocketIoService.addObject(addObject);
 
         //FabricService.selectionCreated(selectionCreated);
@@ -183,36 +178,21 @@ nwmApplication.service('CanvasService',['$routeParams', '$window', 'SocketIoServ
             FabricService.canvas().renderAll();
         }
 
-        function moving(message){
+        function updateFabricObject(message){
             var object = FabricService.findObjectFromCanvasWith(message.objectId);
-            object.top = message.top;
-            object.left= message.left;
-            object.originX = message.originX;
-            object.originY = message.originY;
+            setFabricObjectInfoAndRender(object, message);
             FabricService.canvas().renderAll();
         }
 
-        function rotating(message){
-            var object = FabricService.findObjectFromCanvasWith(message.objectId);
-            object.angle = message.angle;
-            object.originX = message.originX;
-            object.originY = message.originY;
-            object.top = message.top;
-            object.left= message.left;
-            FabricService.canvas().renderAll();
+        function setFabricObjectInfoAndRender(fabricObject, message){
+            fabricObject.angle = message.angle;
+            fabricObject.scaleX = message.scaleX;
+            fabricObject.scaleY = message.scaleY;
+            fabricObject.top = message.top;
+            fabricObject.left= message.left;
+            fabricObject.originX = message.originX;
+            fabricObject.originY = message.originY;
         }
-
-        function scaling(message){
-            var object = FabricService.findObjectFromCanvasWith(message.objectId);
-            object.scaleX = message.scaleX;
-            object.scaleY = message.scaleY;
-            object.top = message.top;
-            object.left= message.left;
-            object.originX = message.originX;
-            object.originY = message.originY;
-            FabricService.canvas().renderAll();
-        }
-
         function attachFabricObjectListeners(fabricObject) {
             if (fabricObject.type === 'i-text') {
                 attachListenersToText(fabricObject);
