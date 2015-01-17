@@ -122,16 +122,9 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         SocketIoService.joinRoom(UserService.user());
         FabricService.createCanvas();
         FabricService.addObjectIdToPrototype();
-        ListenerService.bindKyboardListener();
+        ListenerService.bindListeners();
         SocketIoService.reconnect(connect);
-        SocketIoService.syncClient(syncClient);
-        SocketIoService.updateCanvas(updateCanvas);
-        SocketIoService.writing(writing);
-        SocketIoService.moving(updateFabricObject);
-        SocketIoService.rotating(updateFabricObject);
-        SocketIoService.scaling(updateFabricObject);
-        SocketIoService.addObject(addObject);
-        SocketIoService.removeObject(removeObject);
+
         //FabricService.selectionCreated(selectionCreated);
         function selectionCreated(options) {
 
@@ -146,60 +139,6 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
 
         function connect() {
             SocketIoService.joinRoom(UserService.user());
-        }
-
-        function syncClient(message) {
-            SocketIoService.emit('syncClient', {clientId: message.clientId, canvas: JSON.stringify(FabricService.canvas())});
-        }
-
-        function updateCanvas(message) {
-            FabricService.canvas().loadFromJSON(message.canvas);
-            FabricService.findObjects().forEach(function (fabricObject) {
-                ListenerService.attachListenersToFabricObject(fabricObject);
-            });
-            FabricService.canvas().renderAll();
-        }
-
-        function writing(message) {
-            var object = FabricService.findObjectFromCanvasWith(message.objectId);
-            object.text = message.text;
-            FabricService.canvas().renderAll();
-        }
-
-        function updateFabricObject(message) {
-            var object = FabricService.findObjectFromCanvasWith(message.objectId);
-            setFabricObjectInfo(object, message);
-            FabricService.canvas().renderAll();
-        }
-
-        function setFabricObjectInfo(fabricObject, message) {
-            fabricObject.angle = message.angle;
-            fabricObject.scaleX = message.scaleX;
-            fabricObject.scaleY = message.scaleY;
-            fabricObject.top = message.top;
-            fabricObject.left = message.left;
-            fabricObject.originX = message.originX;
-            fabricObject.originY = message.originY;
-        }
-
-        function addObject(message) {
-            var jsonObject = JSON.parse(message);
-            fabric.util.enlivenObjects([jsonObject], function (objects) {
-                var origRenderOnAddRemove = FabricService.canvas().renderOnAddRemove;
-                FabricService.canvas().renderOnAddRemove = false;
-                objects.forEach(function (fabricObject) {
-                    ListenerService.attachListenersToFabricObject(fabricObject);
-                    FabricService.canvas().add(fabricObject);
-                });
-                FabricService.canvas().renderOnAddRemove = origRenderOnAddRemove;
-                FabricService.canvas().renderAll();
-                FabricService.canvas().calcOffset();
-            });
-        }
-
-        function removeObject(message){
-            FabricService.removeObject(message.objectId);
-            FabricService.canvas().renderAll();
         }
     }
 }])
