@@ -1,8 +1,7 @@
 'use strict';
-nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService) {
+nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService','ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
     var self = this;
-    var copiedObjects = new Array();
-    var pastecount = 20;
+
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
@@ -23,7 +22,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if (!options.target) {
                 var iText = FabricService.createItext(options);
                 createAndSyncFrom(iText);
-                attachCommonListeners(iText);
+                ListenerService.attachListenersToFabricObject(iText);
                 iText.enterEditing();
                 iText.selectionStart = 0;
                 iText.selectionEnd = iText.text.length;
@@ -39,7 +38,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if (!options.target) {
                 var rect = FabricService.createRect(options);
                 createAndSyncFrom(rect);
-                attachCommonListeners(rect);
+                ListenerService.attachListenersToFabricObject(rect);
                 self.setActiveCanvasTool('None');
                 FabricService.canvas().renderAll();
             }
@@ -54,7 +53,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
             SocketIoService.emit('addObject', fabricObjectJson);
-            attachCommonListeners(fabricObject)
+            ListenerService.attachListenersToFabricObject(fabricObject)
         }
     }
 
@@ -65,7 +64,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if (!options.target) {
                 var arrow = FabricService.createArrow(options);
                 createAndSyncFrom(arrow);
-                attachCommonListeners(arrow);
+                ListenerService.attachListenersToFabricObject(arrow);
                 self.setActiveCanvasTool('None');
                 FabricService.canvas().renderAll();
             }
@@ -80,37 +79,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         FabricService.canvas().setActiveObject(fabricObject);
     }
 
-    function attachCommonListeners(fabricObjectToAttach) {
-        fabricObjectToAttach.on('moving', movingMessage);
-        fabricObjectToAttach.on('rotating', rotatingObject);
-        fabricObjectToAttach.on('scaling', scalingObject);
 
-        if(fabricObjectToAttach.type === 'i-text' ){
-            fabricObjectToAttach.on('changed', function (event) {
-                SocketIoService.emit('writing', {'objectId': fabricObjectToAttach.objectId, 'text': fabricObjectToAttach.text});
-            });
-        }
-        function movingMessage(event) {
-            SocketIoService.emit('moving',createMessage(fabricObjectToAttach));
-        }
-        function rotatingObject(event) {
-            SocketIoService.emit('rotating',createMessage(fabricObjectToAttach));
-        }
-        function scalingObject(event) {
-            SocketIoService.emit('scaling',createMessage(fabricObjectToAttach));
-        }
-
-        function createMessage(fabricObject){
-            return {'objectId': fabricObject.objectId, 'angle': fabricObject.angle, 'originX': fabricObject.originX, 'originY': fabricObject.originY, 'scaleX': fabricObject.scaleX, 'scaleY': fabricObject.scaleY, 'left': fabricObject.left, 'top': fabricObject.top};
-        }
-    }
-
-    function removeAllListeners(fabricObject){
-        fabricObject.off('moving');
-        fabricObject.off('rotating');
-        fabricObject.off('scaling');
-        fabricObject.off('changed');
-    }
 
     this.canvasTools = function () {
         return canvasToolOptions;
@@ -150,10 +119,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         FabricService.canvas().calcOffset();
     }
     this.start = function ($scope) {
-        createListenersKeyboard();
         SocketIoService.joinRoom(UserService.user());
         FabricService.createCanvas();
         FabricService.addObjectIdToPrototype();
+        ListenerService.bindKyboardListener();
         SocketIoService.reconnect(connect);
         SocketIoService.syncClient(syncClient);
         SocketIoService.updateCanvas(updateCanvas);
@@ -172,7 +141,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             //todo: when selecting multiple, position might be incorrect in clients
             //todo: sometimes duplication when moving
             SocketIoService.emit('addObject', fabricObjectJson);
-            attachCommonListeners(fabricObject);
+            ListenerService.attachListenersToFabricObject(fabricObject);
         }
 
         function connect() {
@@ -186,7 +155,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         function updateCanvas(message) {
             FabricService.canvas().loadFromJSON(message.canvas);
             FabricService.findObjects().forEach(function (fabricObject) {
-                attachFabricObjectListeners(fabricObject);
+                ListenerService.attachListenersToFabricObject(fabricObject);
             });
             FabricService.canvas().renderAll();
         }
@@ -213,28 +182,13 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             fabricObject.originY = message.originY;
         }
 
-        function attachFabricObjectListeners(fabricObject) {
-            attachCommonListeners(fabricObject);
-
-            /*if (fabricObject.type === 'group') {
-                var toRemove = [];
-                fabricObject._objects.forEach(function (element) {
-                    toRemove.push(FabricService.findObjectFromCanvasWith(element.objectId));
-                });
-                toRemove.forEach(function (element) {
-                    FabricService.canvas().remove(element);
-                });
-                attachCommonListeners(fabricObject);
-            }*/
-        }
-
         function addObject(message) {
             var jsonObject = JSON.parse(message);
             fabric.util.enlivenObjects([jsonObject], function (objects) {
                 var origRenderOnAddRemove = FabricService.canvas().renderOnAddRemove;
                 FabricService.canvas().renderOnAddRemove = false;
                 objects.forEach(function (fabricObject) {
-                    attachFabricObjectListeners(fabricObject);
+                    ListenerService.attachListenersToFabricObject(fabricObject);
                     FabricService.canvas().add(fabricObject);
                 });
                 FabricService.canvas().renderOnAddRemove = origRenderOnAddRemove;
@@ -248,97 +202,4 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             FabricService.canvas().renderAll();
         }
     }
-
-
-    function removeActiveObjectAndSync(){
-        var objectId = FabricService.removeActiveObject();
-        SocketIoService.emit('removeObject', {objectId:objectId});
-        FabricService.canvas().renderAll();
-    }
-
-    function createListenersKeyboard() {
-        document.onkeydown = onKeyDownHandler;
-    }
-
-    function onKeyDownHandler(event) {
-        var key;
-        if(window.event){ key = window.event.keyCode; }
-        else{ key = event.keyCode;}
-
-        switch(key){
-            case 67: // Ctrl+C
-                if(ableToShortcut()){
-                    if(event.ctrlKey){
-                        event.preventDefault();
-                        copy();
-                    }
-                }
-                break;
-            case 86: // Ctrl+V
-                if(ableToShortcut()){
-                    if(event.ctrlKey){
-                        event.preventDefault();
-                        paste();
-                    }
-                }
-                break;
-            case 46: //delete
-                event.preventDefault();
-                removeActiveObjectAndSync();
-                break;
-            default:
-                // TODO
-                break;
-        }
-    }
-
-
-    function ableToShortcut(){
-        /*
-        TODO check all cases for this
-
-        if($("textarea").is(":focus")){
-            return false;
-        }
-        if($(":text").is(":focus")){
-            return false;
-        }
-        */
-        return true;
-    }
-
-    function copy(){
-        /*if(FabricService.canvas().getActiveGroup()){
-            for(var i in FabricService.canvas().getActiveGroup().objects){
-                var object = fabric.util.object.clone(FabricService.canvas().getActiveGroup().objects[i]);
-                object.set("top", object.top+5);
-                object.set("left", object.left+5);
-                copiedObjects[i] = object;
-            }
-        }
-        */
-        if(FabricService.canvas().getActiveObject()){
-            copiedObjects[0] = FabricService.canvas().getActiveObject();
-            pastecount = 20;
-        }
-    }
-
-    function paste(){
-        if(copiedObjects.length > 0){
-            copiedObjects.forEach(function(fabricObject){
-                var clonedFabricObject = fabricObject.clone();
-                clonedFabricObject.set("top", fabricObject.top + pastecount);
-                clonedFabricObject.set("left", fabricObject.left + pastecount);
-                pastecount = pastecount + 20;
-                clonedFabricObject.objectId = Utils.guid();
-                removeAllListeners(clonedFabricObject);
-                attachCommonListeners(clonedFabricObject);
-                FabricService.canvas().add(clonedFabricObject);
-                var json = JSON.stringify(clonedFabricObject);
-                SocketIoService.emit('addObject', json);
-            })
-        }
-        FabricService.canvas().renderAll();
-    }
-
 }])
