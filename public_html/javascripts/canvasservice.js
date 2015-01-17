@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService','ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
+nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
     var self = this;
 
     var canvasToolOptions = [
@@ -57,10 +57,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
     }
 
-    function canvasToolArrow(){
+    function canvasToolArrow() {
         FabricService.mouseDown(createArrow);
 
-        function createArrow(options){
+        function createArrow(options) {
             if (!options.target) {
                 var arrow = FabricService.createArrow(options);
                 createAndSyncFrom(arrow);
@@ -78,7 +78,6 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         FabricService.canvas().add(fabricObject);
         FabricService.canvas().setActiveObject(fabricObject);
     }
-
 
 
     this.canvasTools = function () {
@@ -102,7 +101,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     }
     this.setActiveCanvasTool = function (name) {
         var activeCanvasTool = this.findActiveCanvasTool();
-        if(activeCanvasTool) {
+        if (activeCanvasTool) {
             if (!name || activeCanvasTool.name === name) {
                 return;
             }
