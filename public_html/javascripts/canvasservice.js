@@ -1,7 +1,9 @@
 'use strict';
 nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
     var self = this;
-
+    this.getCanvasAsBase64 = function(imagetype){
+        return FabricService.canvas().toDataURL(imagetype);
+    }
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},

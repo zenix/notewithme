@@ -7,6 +7,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         canvas.setWidth($window.innerWidth - 39);
         canvas.setHeight($window.innerHeight - 39);
         canvas.selection = false;
+        canvas.backgroundColor = '#ffffff';
         canvas.calcOffset();
     }
     this.addObjectIdToPrototype = function () {

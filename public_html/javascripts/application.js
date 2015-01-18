@@ -1,6 +1,7 @@
 'use strict';
 var nwmApplication = angular.module('notewithme', ['ngRoute']);
-nwmApplication.config(['$routeProvider', function ($routeProvider) {
+nwmApplication.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^data:image\//);
     $routeProvider.
         when('/room/:roomName', {
             templateUrl: 'partials/room.html',

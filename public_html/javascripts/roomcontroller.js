@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.controller('roomController', ['$scope', '$location', '$routeParams', '$compile', '$window', 'SocketIoService', 'UserService', 'CanvasService', function ($scope, $location, $routeParams, $compile, $window, SocketIoService, UserService, CanvasService) {
+nwmApplication.controller('roomController', ['$scope', '$location', '$routeParams', '$timeout', '$window', 'SocketIoService', 'UserService', 'CanvasService', function ($scope, $location, $routeParams, $timeout, $window, SocketIoService, UserService, CanvasService) {
     if (UserService.isEmpty()) {
         $scope.modal = {};
         $scope.modal.show = true;
