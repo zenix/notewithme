@@ -5,7 +5,7 @@ describe('in main page', function() {
     browser.get('http://localhost:3000/#/');
   })
 
-  it('front page loads', function() {
+  it('notewithme.com - start, share and collaborate', function() {
     expect(browser.getTitle()).toEqual('notewithme');
   });
 
