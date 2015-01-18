@@ -5,8 +5,8 @@ describe('in main page', function() {
     browser.get('http://localhost:3000/#/');
   })
 
-  it('notewithme.com - start, share and collaborate', function() {
-    expect(browser.getTitle()).toEqual('notewithme');
+  it('title is correct', function() {
+    expect(browser.getTitle()).toEqual('notewithme.com - start, share and collaborate');
   });
 
   it('clicking start button modal opens', function(){
