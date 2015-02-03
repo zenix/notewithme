@@ -21,7 +21,8 @@
     "angular": "~1.3.8",
     "angular-route": "~1.3.8",
     "fabric": "~1.4.13",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "angular-socialshare": "~0.0.6"
   },
   "overrides": {
     "jquery": {
@@ -31,19 +32,22 @@
       "main": "dist/js/bootstrap.min.js"
     },
     "angular": {
-      "main":"./angular.min.js"
+      "main": "./angular.min.js"
     },
     "fabric": {
-      "main":"dist/fabric.min.js"
+      "main": "dist/afabric.min.js"
     },
     "angular-route": {
-      "main":"./angular-route.min.js"
+      "main": "./angular-route.min.js"
     },
     "lodash": {
-      "main":"dist/lodash.min.js"
+      "main": "dist/lodash.min.js"
     },
     "socket.io-client": {
-      "main":"./socket.io.js"
+      "main": "./socket.io.js"
+    },
+    "angular-socialshare": {
+      "main": "./socialshare.min.css"
     }
   }
 }
