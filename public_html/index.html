@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="notewithme">
-  <head>
+<head>
     <title>notewithme.com - start, share and collaborate</title>
 
-  <meta name="application-name" content="notewithme.com">
-  <meta name="author" content="Jari Timonen">
-  <meta name="distributor" content="">
-  <meta name="robots" content="Index">
-  <meta name="description" content="start, share, collaborate. Create notes with other people and see editing in real time. Write, draw, stretch and move elements as much as you want.">
-  <meta name="keywords" content="notewithme, notewithme, note, create notes, start, share, collaborate, move, stretch, write, draw">
-  <meta name="rating" content="General">
-  <meta name="dcterms.title" content="notewithme.com - start, share and collaborate">
-  <meta name="dcterms.contributor" content="Jari Timonen">
-  <meta name="dcterms.creator" content="Jari Timonen">
-  <meta name="dcterms.publisher" content="Jari Timonen">
-  <meta name="dcterms.description" content="start, share, collaborate. Create notes with other people and see editing in real time.">
-  <meta name="dcterms.rights" content="">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="notewithme.com - start, share and collaborate">
-  <meta property="og:description" content="start, share, collaborate. Create notes with other people and see editing in real time.">
-  <meta property="twitter:title" content="notewithme.com - start, share and collaborate ">
-  <meta property="twitter:description" content="start, share, collaborate. Create notes with other people and see editing in real time.">
+    <meta name="application-name" content="notewithme.com">
+    <meta name="author" content="Jari Timonen">
+    <meta name="distributor" content="">
+    <meta name="robots" content="Index">
+    <meta name="description"
+          content="start, share, collaborate. Create notes with other people and see editing in real time. Write, draw, stretch and move elements as much as you want.">
+    <meta name="keywords"
+          content="notewithme, notewithme, note, create notes, start, share, collaborate, move, stretch, write, draw">
+    <meta name="rating" content="General">
+    <meta name="dcterms.title" content="notewithme.com - start, share and collaborate">
+    <meta name="dcterms.contributor" content="Jari Timonen">
+    <meta name="dcterms.creator" content="Jari Timonen">
+    <meta name="dcterms.publisher" content="Jari Timonen">
+    <meta name="dcterms.description"
+          content="start, share, collaborate. Create notes with other people and see editing in real time.">
+    <meta name="dcterms.rights" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="notewithme.com - start, share and collaborate">
+    <meta property="og:description"
+          content="start, share, collaborate. Create notes with other people and see editing in real time.">
+    <meta property="twitter:title" content="notewithme.com - start, share and collaborate ">
+    <meta property="twitter:description"
+          content="start, share, collaborate. Create notes with other people and see editing in real time.">
     <!-- build:js -->
     <script src="bower_components/socket.io-client/socket.io.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -29,6 +34,7 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/fabric/dist/fabric.js"></script>
     <script src="bower_components/lodash/dist/lodash.js"></script>
+
 
     <script src="javascripts/application.js"></script>
     <script src="javascripts/utils.js"></script>
@@ -47,18 +53,25 @@
     <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="stylesheets/style.css">
 
-  </head>
-  <body>
-    <div ng-view></div>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+</head>
+<body>
+<div ng-view></div>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-      ga('create', 'UA-58540897-1', 'auto');
-      ga('send', 'pageview');
+    ga('create', 'UA-58540897-1', 'auto');
+    ga('send', 'pageview');
 
-    </script>
-  </body>
+</script>
+</body>
 </html>
