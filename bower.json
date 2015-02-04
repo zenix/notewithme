@@ -47,7 +47,7 @@
       "main": "./socket.io.js"
     },
     "angular-socialshare": {
-      "main": "./socialshare.min.css"
+      "main": "./angular-socialshare.min.js"
     }
   }
 }
