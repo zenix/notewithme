@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils', function ($window, FabricService, SocketIoService, Utils) {
+nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils','UserService', function ($window, FabricService, SocketIoService, Utils, UserService) {
     var self = this;
     var copiedObjects = new Array();
     var pastecount = 20;
@@ -14,6 +14,16 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         SocketIoService.addObject(addObject);
         SocketIoService.removeObject(removeObject);
     }
+
+    this.saveCanvas = function(message) {
+        SocketIoService.emit('saveCanvas',
+            {
+                randomString: UserService.user().randomString,
+                title: UserService.user().title,
+                canvas: JSON.stringify(FabricService.canvas())
+            });
+    }
+
 
     function onKeyDownHandler(event) {
         var key;

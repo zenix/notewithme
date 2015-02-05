@@ -4,6 +4,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     this.getCanvasAsBase64 = function(imagetype){
         return FabricService.canvas().toDataURL(imagetype);
     }
+
+    this.saveCanvas = function(){
+        ListenerService.saveCanvas();
+    }
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},

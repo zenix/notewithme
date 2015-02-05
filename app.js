@@ -36,6 +36,10 @@ io.on('connection', function(socket){
         io.sockets.connected[msg.clientId].emit('updateCanvas', {canvas:msg.canvas});
     })
 
+    socket.on('saveCanvas', function(msg){
+        console.log(msg)
+    })
+
     addListener('addObject');
     addListener('removeObject');
     addListener('writing');
