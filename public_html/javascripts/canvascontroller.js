@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.controller('roomController', ['$scope', '$location', '$routeParams', '$timeout', '$window', 'SocketIoService', 'UserService', 'CanvasService', function ($scope, $location, $routeParams, $timeout, $window, SocketIoService, UserService, CanvasService) {
+nwmApplication.controller('canvasController', ['$scope', '$location', '$routeParams', '$timeout', '$window', 'SocketIoService', 'UserService', 'CanvasService', function ($scope, $location, $routeParams, $timeout, $window, SocketIoService, UserService, CanvasService) {
     if (UserService.isEmpty()) {
         $scope.modal = {};
         $scope.modal.show = true;
@@ -31,7 +31,8 @@ nwmApplication.controller('roomController', ['$scope', '$location', '$routeParam
         $scope.$watch('modalsubmit', function (newValue, oldValue) {
             if (newValue) {
                 UserService.user().name = newValue.name;
-                UserService.user().room = $routeParams.roomName;
+                UserService.user().randomString = $routeParams.randomString;
+                UserService.user().title = $routeParams.title;
                 trackStartFromLink();
                 start();
             }

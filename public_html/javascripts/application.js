@@ -6,9 +6,9 @@ nwmApplication.run(['$FB', function($FB){
 nwmApplication.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^data:image\//);
     $routeProvider.
-        when('/room/:roomName', {
-            templateUrl: 'partials/room.html',
-            controller: 'roomController'
+        when('/r/:randomString/:title', {
+            templateUrl: 'partials/canvas.html',
+            controller: 'canvasController'
         }).
         when('/', {
             templateUrl: 'partials/main.html',
