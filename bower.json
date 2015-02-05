@@ -35,7 +35,7 @@
       "main": "./angular.min.js"
     },
     "fabric": {
-      "main": "dist/afabric.min.js"
+      "main": "dist/fabric.min.js"
     },
     "angular-route": {
       "main": "./angular-route.min.js"
