@@ -1,2 +1,2 @@
 #!/bin/sh
-DEBUG=notewithme node app.js
+nohup node app >> output.log 2>&1 &
