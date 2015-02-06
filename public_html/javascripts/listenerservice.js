@@ -169,6 +169,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     }
 
     function updateCanvas(message) {
+        console.log("moi: " + message)
         FabricService.canvas().loadFromJSON(message.canvas);
         FabricService.findObjects().forEach(function (fabricObject) {
             self.attachListenersToFabricObject(fabricObject);

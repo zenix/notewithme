@@ -20,16 +20,24 @@ io.on('connection', function(socket){
     socket.on('joinRoom', function(msg){
         console.log(msg.name + ' joined ' + getRoom(msg));
         socket.user = msg;
-        socket.join(msg.randomString + "/" + msg.title);
-        if(Object.keys(io.sockets.connected).length > 1) {
+        socket.join(getRoom(msg));
+        var clientsConnected = Object.keys(io.sockets.connected).length;
+        if(clientsConnected > 1) {
             var clients_in_the_room = io.sockets.adapter.rooms[getRoom(msg)];
             for (var clientId in clients_in_the_room) {
                 if(clientId != socket.id){
-                    var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+                    var client_socket = io.sockets.connected[clientId];
                     client_socket.emit('syncClient', {clientId:socket.id})
                     break;
                 }
             }
+        }else if(clientsConnected == 1){
+            var redisClient = redis.createClient();
+            var room = getRoom(msg);
+            redisClient.get(room, function(err, canvas){
+                console.log("Getting saved canvas:  " + room);
+                io.sockets.in(room).emit('updateCanvas', {canvas:canvas});
+            })
         }
     });
 
