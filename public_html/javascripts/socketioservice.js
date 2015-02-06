@@ -37,5 +37,8 @@ nwmApplication.service('SocketIoService', function () {
         this.removeObject = function (fn) {
             socket.on('removeObject', fn);
         }
+        this.messageChannel = function(fn){
+            socket.on('messageChannel', fn);
+        }
     }
 );
