@@ -37,6 +37,8 @@ io.on('connection', function (socket) {
                 }
             })
         }
+
+        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', {status:'New user!', message:socket.user.name + ' joined.'});
     });
     socket.on('syncClient', function (msg) {
         io.sockets.connected[msg.clientId].emit('updateCanvas', {canvas: msg.canvas});
@@ -71,7 +73,7 @@ io.on('connection', function (socket) {
         });
     };
     function getRoom(user) {
-        return user.randomString + "/" + user.title;
+        return user.randomString + "/" + user.room;
     }
 });
 // uncomment after placing your favicon in /public

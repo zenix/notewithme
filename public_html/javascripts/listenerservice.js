@@ -19,7 +19,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         SocketIoService.emit('saveCanvas',
             {
                 randomString: UserService.user().randomString,
-                title: UserService.user().title,
+                room: UserService.user().room,
                 canvas: JSON.stringify(FabricService.canvas())
             });
     }

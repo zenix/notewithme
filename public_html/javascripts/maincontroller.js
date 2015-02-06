@@ -4,9 +4,9 @@ nwmApplication.controller('mainController', ['$scope', '$location', 'UserService
     $scope.start = function (user) {
         UserService.user().name = user.name;
         UserService.user().randomString = Utils.randomString() + Utils.randomString();
-        UserService.user().topic = user.title;
+        UserService.user().topic = user.room;
         trackStart();
-        $location.path('/r/' + UserService.user().randomString + '/' + user.title);
+        $location.path('/r/' + UserService.user().randomString + '/' + user.room);
     }
     function trackStart() {
         ga('send', 'event', 'User Path', 'Modal', 'Start');

@@ -32,7 +32,7 @@ nwmApplication.controller('canvasController', ['$scope', '$location', '$routePar
             if (newValue) {
                 UserService.user().name = newValue.name;
                 UserService.user().randomString = $routeParams.randomString;
-                UserService.user().title = $routeParams.title;
+                UserService.user().title = $routeParams.room;
                 trackStartFromLink();
                 start();
             }
