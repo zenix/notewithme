@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var redis = require("redis");
 
 var app = express();
 
@@ -37,7 +38,10 @@ io.on('connection', function(socket){
     })
 
     socket.on('saveCanvas', function(msg){
-        console.log(msg)
+        var redisClient = redis.createClient();
+        var room = getRoom(msg);
+        redisClient.set(room, msg.canvas, redis.print);
+        console.log("saving.. " + room);
     })
 
     addListener('addObject');
