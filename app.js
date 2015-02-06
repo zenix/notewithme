@@ -12,14 +12,32 @@ io.on('connection', function (socket) {
     console.log('a user connected');
     socket.on('disconnect', function (msg) {
         console.log(socket.user.name + ' disconnected');
-        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', {status:'User disconneted!', message:socket.user.name + ' left the room.'});
+        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', messageForChannel('User disconneted!', socket.user.name + ' left the room.'));
     });
     socket.on('joinRoom', function (msg) {
         console.log(msg.name + ' joined ' + getRoom(msg));
         socket.user = msg;
         socket.join(getRoom(msg));
         var clientsConnected = Object.keys(io.sockets.connected).length;
-        if (clientsConnected > 1) {
+
+        if (clientsConnected == 1) {
+            checkIfHasExistingCanvasAndUpdateCanvas();
+        } else if (clientsConnected > 1) {
+            findFirstClientAndAskForSync();
+        }
+
+        function checkIfHasExistingCanvasAndUpdateCanvas() {
+            var redisClient = redis.createClient();
+            var room = getRoom(msg);
+            redisClient.get(room, function (err, canvas) {
+                if (canvas != '') {
+                    console.log("Getting saved canvas:  " + room);
+                    sendMessageToAllIn(room).emit('updateCanvas', {canvas: canvas});
+                }
+            })
+        }
+
+        function findFirstClientAndAskForSync() {
             var clients_in_the_room = io.sockets.adapter.rooms[getRoom(msg)];
             for (var clientId in clients_in_the_room) {
                 if (clientId != socket.id) {
@@ -28,35 +46,35 @@ io.on('connection', function (socket) {
                     break;
                 }
             }
-        } else if (clientsConnected == 1) {
-            var redisClient = redis.createClient();
-            var room = getRoom(msg);
-            redisClient.get(room, function (err, canvas) {
-                if(canvas != '') {
-                    console.log("Getting saved canvas:  " + room);
-                    io.sockets.in(room).emit('updateCanvas', {canvas: canvas});
-                }
-            })
         }
 
-        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', {status:'New user!', message:socket.user.name + ' joined.'});
+        sendToAllInRoomButMe(getRoom(socket.user)).emit('messageChannel', messageForChannel('New user!', socket.user.name + ' joined.'));
     });
+
+    function messageForChannel(status, message){
+        return {status:status, message:message};
+    }
     socket.on('syncClient', function (msg) {
         io.sockets.connected[msg.clientId].emit('updateCanvas', {canvas: msg.canvas});
     })
+    function sendMessageToAllIn(room) {
+        return io.sockets.in(room);
+    }
+
+
+    function sendToAllInRoomButMe(room) {
+        return socket.broadcast.to(room);
+    }
     socket.on('saveCanvas', function (msg) {
         var redisClient = redis.createClient();
         var room = getRoom(msg);
         redisClient.set(room, msg.canvas, redis.print);
-        console.log("saving: " + room);
-        var messageToSend = {};
-        messageToSend.status = 'Success.';
-        messageToSend.message = 'Canvas saved.'
-        io.sockets.in(room).emit('messageChannel', messageToSend);
+        console.log("Saving: " + room);
+        sendMessageToAllIn(room).emit('messageChannel', messageForChannel('Success.', 'Canvas saved.'));
     })
 
     socket.on('messageChannel', function(msg){
-        io.sockets.in(room).emit('messageChannel', msg);
+        sendMessageToAllIn(room).emit('messageChannel', msg);
     });
 
     addListener('addObject');
@@ -65,11 +83,13 @@ io.on('connection', function (socket) {
     addListener('scaling');
     addListener('rotating');
     addListener('moving');
+
+
     function addListener(name) {
         socket.on(name, function (msg) {
             var user = socket.user;
             if (user) {
-                socket.broadcast.to(getRoom(user)).emit(name, msg);
+                sendToAllInRoomButMe(getRoom(room)).emit(name, msg);
             }
         });
     };
