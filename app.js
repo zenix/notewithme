@@ -89,7 +89,7 @@ io.on('connection', function (socket) {
         socket.on(name, function (msg) {
             var user = socket.user;
             if (user) {
-                sendToAllInRoomButMe(getRoom(room)).emit(name, msg);
+                sendToAllInRoomButMe(getRoom(user)).emit(name, msg);
             }
         });
     };

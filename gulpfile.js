@@ -105,4 +105,6 @@ gulp.task('build', function(){
     return runSequence('clean', 'scripts', 'copy-resources','copy-nodejs', 'concat-vendor','scripts-concat', 'clean-tmp-files', 'revision','replace-min');
 })
 
+gulp.task('default',['build']);
+
 
