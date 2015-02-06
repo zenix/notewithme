@@ -11,7 +11,8 @@ var io = require('socket.io')(http);
 io.on('connection', function (socket) {
     console.log('a user connected');
     socket.on('disconnect', function (msg) {
-        console.log('user disconnected');
+        console.log(socket.user.name + ' disconnected');
+        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', {status:'User disconneted!', message:socket.user.name + ' left the room.'});
     });
     socket.on('joinRoom', function (msg) {
         console.log(msg.name + ' joined ' + getRoom(msg));
