@@ -17,11 +17,11 @@ io.on('connection', function(socket){
     });
 
     socket.on('joinRoom', function(msg){
-        console.log(msg.name + ' joined ' + msg.room)
+        console.log(msg.name + ' joined ' + getRoom(msg));
         socket.user = msg;
-        socket.join(msg.room);
+        socket.join(msg.randomString + "/" + msg.title);
         if(Object.keys(io.sockets.connected).length > 1) {
-            var clients_in_the_room = io.sockets.adapter.rooms[msg.room];
+            var clients_in_the_room = io.sockets.adapter.rooms[getRoom(msg)];
             for (var clientId in clients_in_the_room) {
                 if(clientId != socket.id){
                     var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
@@ -51,10 +51,14 @@ io.on('connection', function(socket){
         socket.on(name, function(msg){
             var user = socket.user;
             if(user) {
-                socket.broadcast.to(user.room).emit(name, msg);
+                socket.broadcast.to(getRoom(user)).emit(name, msg);
             }
         });
     };
+
+    function getRoom(user){
+        return user.randomString + "/" + user.title;
+    }
 });
 
 
