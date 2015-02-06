@@ -31,8 +31,10 @@ io.on('connection', function (socket) {
             var redisClient = redis.createClient();
             var room = getRoom(msg);
             redisClient.get(room, function (err, canvas) {
-                console.log("Getting saved canvas:  " + room);
-                io.sockets.in(room).emit('updateCanvas', {canvas: canvas});
+                if(canvas != '') {
+                    console.log("Getting saved canvas:  " + room);
+                    io.sockets.in(room).emit('updateCanvas', {canvas: canvas});
+                }
             })
         }
     });

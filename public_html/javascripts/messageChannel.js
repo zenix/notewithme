@@ -9,7 +9,7 @@ nwmApplication.directive('messagechannel', ['SocketIoService', '$timeout', funct
                 $element.find('.alert').addClass('in');
                 $timeout(function(){
                     $element.find('.alert').removeClass('in');
-                },4000);
+                },3500);
                 $scope.$apply();
             }
         },
