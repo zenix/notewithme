@@ -44,7 +44,16 @@ io.on('connection', function (socket) {
         var room = getRoom(msg);
         redisClient.set(room, msg.canvas, redis.print);
         console.log("saving: " + room);
+        var messageToSend = {};
+        messageToSend.status = 'Success.';
+        messageToSend.message = 'Canvas saved.'
+        io.sockets.in(room).emit('messageChannel', messageToSend);
     })
+
+    socket.on('messageChannel', function(msg){
+        io.sockets.in(room).emit('messageChannel', msg);
+    });
+
     addListener('addObject');
     addListener('removeObject');
     addListener('writing');

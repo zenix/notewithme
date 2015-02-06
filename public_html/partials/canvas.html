@@ -1,13 +1,20 @@
 <div class="container-fluid">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <buttons-radio class="btn-group" data-toggle="buttons-radio"
                        model='canvasToolModel'
                        options='canvasToolOptions'>
         </buttons-radio>
+    </div>
+    <div class="col-md-1">
         <downloadasimage></downloadasimage>
+    </div>
+    <div class="col-md-1">
         <save></save>
     </div>
+    <div class="col-md-3">
+        <messagechannel></messagechannel>
+    </div>
+    <div class="col-md-4"></div>
 </div>
 <modal title="{{modal.title}}" show="{{modal.show}}" ng-model="modalsubmit"></modal>
-
 <canvas id="mainCanvas"></canvas>
