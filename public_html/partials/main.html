@@ -84,14 +84,14 @@
                 <div class="modal-body">
                     <p>
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" placeholder="Name" ng-model="user.name">
-                            <input type="text" class="form-control" placeholder="Room" ng-model="user.room">
+                            <input type="text" class="form-control name" placeholder="Name" ng-model="user.name">
+                            <input type="text" class="form-control room" placeholder="Room" ng-model="user.room">
                         </div>
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" ng-click="start(user)">Start</button>
+                    <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="start" class="btn btn-primary" ng-click="start(user)">Start</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->
