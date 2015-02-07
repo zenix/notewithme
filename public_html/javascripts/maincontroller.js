@@ -4,7 +4,7 @@ nwmApplication.controller('mainController', ['$scope', '$location', 'UserService
     $scope.start = function (user) {
         UserService.user().name = user.name;
         UserService.user().randomString = Utils.randomString() + Utils.randomString();
-        UserService.user().topic = user.room;
+        UserService.user().room = user.room;
         trackStart();
         $location.path('/r/' + UserService.user().randomString + '/' + user.room);
     }

@@ -11,8 +11,12 @@ var io = require('socket.io')(http);
 io.on('connection', function (socket) {
     console.log('a user connected');
     socket.on('disconnect', function (msg) {
-        console.log(socket.user.name + ' disconnected');
-        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', messageForChannel('User disconneted!', socket.user.name + ' left the room.'));
+        var userName = "John Doe";
+        if(socket.user){
+            userName = socket.user.name;
+        }
+        console.log(userName + ' disconnected');
+        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', messageForChannel('User disconneted!', userName + ' left the room.'));
     });
     socket.on('joinRoom', function (msg) {
         console.log(msg.name + ' joined ' + getRoom(msg));
