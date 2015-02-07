@@ -14,9 +14,10 @@ io.on('connection', function (socket) {
         var userName = "John Doe";
         if(socket.user){
             userName = socket.user.name;
+            socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', messageForChannel('User disconneted!', userName + ' left the room.'));
         }
         console.log(userName + ' disconnected');
-        socket.broadcast.to(getRoom(socket.user)).emit('messageChannel', messageForChannel('User disconneted!', userName + ' left the room.'));
+
     });
     socket.on('joinRoom', function (msg) {
         console.log(msg.name + ' joined ' + getRoom(msg));
