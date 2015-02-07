@@ -18,14 +18,19 @@ describe('in main page', function () {
             browser.sleep(300);
             element(modalNameByModel()).sendKeys('Jari Timonen');
             element(modalRoomByModel()).sendKeys('TestinRoom');
-            element(modalStartByCss()).click().then(fn);
+            element(modalStartById()).click().then(fn);
         })
     }
 
 
-    function modalStartByCss() {
+    function modalStartById() {
         return by.id('start');
     }
+
+    function modalCloseById() {
+        return by.id('close');
+    }
+
 
     function canvasByCss(){
         return by.css('#mainCanvas');
@@ -39,19 +44,33 @@ describe('in main page', function () {
         return by.model('user.room');
     }
 
+    function modalTitleByCss() {
+        return by.css('.modal-title');
+    }
+
     it('clicking start button modal opens', function () {
         openAndGetMainPageModal().then(function () {
             browser.sleep(300);
-            expect(element(by.css('.modal-title')).getText()).toEqual('Just enter your name and room and you\'re free to start collaborating.');
-            expect(element.all(modalNameByModel()).count()).toEqual(1);
-            expect(element.all(modalRoomByModel()).count()).toEqual(1);
+            expect(element(modalTitleByCss()).getText()).toEqual('Just enter your name and room and you\'re free to start collaborating.');
+            expect(element(modalNameByModel()).isPresent()).toBe(true);
+            expect(element(modalRoomByModel()).isPresent()).toBe(true);
         });
+    });
+
+   it('modal close works', function(){
+        openAndGetMainPageModal().then(function () {
+            browser.sleep(300);
+            element(modalCloseById()).click();
+            browser.sleep(300);
+            expect(element(modalTitleByCss()).isDisplayed()).toBe(false);
+
+        })
     });
 
     it('clicking start button and filling name and room leads to canvas with correct name/room', function(){
         openCanvas(function(){
             browser.sleep(200);
-            expect(element.all(canvasByCss()).count()).toEqual(1);
+            expect(element(canvasByCss()).isPresent()).toBe(true);
         });
     });
 });
