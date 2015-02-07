@@ -24,7 +24,6 @@ io.on('connection', function (socket) {
         socket.user = msg;
         socket.join(getRoom(msg));
         var clientsConnected = Object.keys(io.nsps['/'].adapter.rooms[getRoom(msg)]).length;
-        console.log(clientsConnectedRoom)
 
         if (clientsConnected == 1) {
             checkIfHasExistingCanvasAndUpdateCanvas();
