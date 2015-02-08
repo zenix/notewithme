@@ -1,7 +1,7 @@
 #!/bin/sh
 npm install
-npm install -g gulp
+npm install gulp
 bower install
-gulp
+node_modules/gulp/bin/gulp.js
 node dist/app &
 node_modules/protractor/bin/protractor protractor-conf.js
