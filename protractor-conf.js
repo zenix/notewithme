@@ -5,5 +5,8 @@ exports.config = {
     capabilities: {
         browserName: 'chrome',
         platform: 'LINUX'
+    },
+    chromeOptions: {
+        args: ['--no-sandbox', '--test-type=browser']
     }
 }
