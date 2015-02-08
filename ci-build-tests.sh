@@ -1,4 +1,4 @@
 #!/bin/sh
 npm install
-bower instal
+bower install
 node_modules/protractor/bin/protractor protractor-conf.js
