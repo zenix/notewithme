@@ -58,7 +58,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             var fabricObject = options.path;
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
-            SocketIoService.emit('addObject', fabricObjectJson);
+            SocketIoService.send().addObject(fabricObjectJson);
             ListenerService.attachListenersToFabricObject(fabricObject)
         }
     }
@@ -79,7 +79,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
 
     function createAndSyncFrom(fabricObject) {
         var json = JSON.stringify(fabricObject);
-        SocketIoService.emit('addObject', json);
+        SocketIoService.send().addObject(json);
         FabricService.canvas().calcOffset();
         FabricService.canvas().add(fabricObject);
         FabricService.canvas().setActiveObject(fabricObject);
@@ -124,11 +124,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         FabricService.canvas().calcOffset();
     }
     this.start = function ($scope) {
-        SocketIoService.joinRoom(UserService.user());
+        SocketIoService.send().joinRoom(UserService.user());
         FabricService.createCanvas();
         FabricService.addObjectIdToPrototype();
         ListenerService.bindListeners();
-        SocketIoService.reconnect(connect);
 
         //FabricService.selectionCreated(selectionCreated);
         function selectionCreated(options) {
@@ -138,12 +137,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             var fabricObjectJson = JSON.stringify(fabricObject);
             //todo: when selecting multiple, position might be incorrect in clients
             //todo: sometimes duplication when moving
-            SocketIoService.emit('addObject', fabricObjectJson);
+            SocketIoService.send().addObject(fabricObjectJson);
             ListenerService.attachListenersToFabricObject(fabricObject);
-        }
-
-        function connect() {
-            SocketIoService.joinRoom(UserService.user());
         }
     }
 }])

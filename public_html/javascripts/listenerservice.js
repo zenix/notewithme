@@ -13,10 +13,12 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         SocketIoService.scaling(updateFabricObject);
         SocketIoService.addObject(addObject);
         SocketIoService.removeObject(removeObject);
+        SocketIoService.reconnect(UserService.user());
+
     }
 
     this.saveCanvas = function(message) {
-        SocketIoService.emit('saveCanvas',
+        SocketIoService.send().saveCanvas(
             {
                 randomString: UserService.user().randomString,
                 room: UserService.user().room,
@@ -102,7 +104,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                 self.attachListenersToFabricObject(clonedFabricObject);
                 FabricService.canvas().add(clonedFabricObject);
                 var json = JSON.stringify(clonedFabricObject);
-                SocketIoService.emit('addObject', json);
+                SocketIoService.send().addObject(json);
             })
         }
         FabricService.canvas().renderAll();
@@ -122,22 +124,19 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
 
         if (fabricObjectToAttach.type === 'i-text') {
             fabricObjectToAttach.on('changed', function (event) {
-                SocketIoService.emit('writing', {
-                    'objectId': fabricObjectToAttach.objectId,
-                    'text': fabricObjectToAttach.text
-                });
+                SocketIoService.send().writing({'objectId': fabricObjectToAttach.objectId, 'text': fabricObjectToAttach.text});
             });
         }
         function movingMessage(event) {
-            SocketIoService.emit('moving', createMessage(fabricObjectToAttach));
+            SocketIoService.send().moving(createMessage(fabricObjectToAttach));
         }
 
         function rotatingObject(event) {
-            SocketIoService.emit('rotating', createMessage(fabricObjectToAttach));
+            SocketIoService.send().rotating(createMessage(fabricObjectToAttach));
         }
 
         function scalingObject(event) {
-            SocketIoService.emit('scaling', createMessage(fabricObjectToAttach));
+            SocketIoService.send().scaling(createMessage(fabricObjectToAttach));
         }
 
         function createMessage(fabricObject) {
@@ -157,12 +156,12 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
 
     function removeActiveObjectAndSync() {
         var objectId = FabricService.removeActiveObject();
-        SocketIoService.emit('removeObject', {objectId: objectId});
+        SocketIoService.send().removeObject({objectId: objectId});
         FabricService.canvas().renderAll();
     }
 
     function syncClient(message) {
-        SocketIoService.emit('syncClient', {
+        SocketIoService.send().syncClient({
             clientId: message.clientId,
             canvas: JSON.stringify(FabricService.canvas())
         });
