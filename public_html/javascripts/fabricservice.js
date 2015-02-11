@@ -2,6 +2,13 @@
 nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, Utils) {
     var self = this;
     var canvas;
+    this.createTimestampToCanvas = function(){
+        if (!Date.now) {
+           Date.now = function() { return new Date().getTime(); }
+        }
+        canvas.timestamp = Date.now();
+    }
+
     this.createCanvas = function () {
         canvas = new fabric.Canvas('mainCanvas');
         canvas.setWidth($window.innerWidth - 39);
