@@ -51,35 +51,56 @@ nwmApplication.service('SocketIoService', function () {
             }
         };
 
-        this.reconnect = function (user) {
-            socket.on('connect', function(){ self.send().joinRoom(user) });
-        };
-        this.syncClient = function (fn) {
-            socket.on('syncClient', fn);
-        };
-        this.updateCanvas = function (fn) {
-            socket.on('updateCanvas', fn);
-        };
-        this.writing = function (fn) {
-            socket.on('writing', fn);
-        };
-        this.moving = function (fn) {
-            socket.on('moving', fn);
-        };
-        this.rotating = function (fn) {
-            socket.on('rotating', fn);
-        };
-        this.scaling = function (fn) {
-            socket.on('scaling', fn);
-        };
-        this.addObject = function (fn) {
-            socket.on('addObject', fn);
-        };
-        this.removeObject = function (fn) {
-            socket.on('removeObject', fn);
-        };
-        this.messageChannel = function(fn){
-            socket.on('messageChannel', fn);
-        };
+        this.receive = function () {
+            function reconnect (user) {
+                on('connect', function () {
+                    self.send().joinRoom(user)
+                });
+            };
+            function syncClient (fn) {
+                on('syncClient', fn);
+            };
+            function updateCanvas(fn) {
+                on('updateCanvas', fn);
+            };
+            function writing(fn) {
+                on('writing', fn);
+            };
+            function moving(fn) {
+                on('moving', fn);
+            };
+            function rotating(fn) {
+                on('rotating', fn);
+            };
+            function scaling(fn) {
+                on('scaling', fn);
+            };
+            function addObject(fn) {
+                on('addObject', fn);
+            };
+            function removeObject(fn) {
+                on('removeObject', fn);
+            };
+            function messageChannel(fn) {
+                on('messageChannel', fn);
+            };
+
+            function on(action, fn){
+                socket.on(action,fn);
+            }
+            return {
+                reconnect: reconnect,
+                syncClient: syncClient,
+                updateCanvas: updateCanvas,
+                writing: writing,
+                moving:moving,
+                rotating: rotating,
+                scaling: scaling,
+                addObject: addObject,
+                removeObject: removeObject,
+                messageChannel:messageChannel
+
+            }
+        }
     }
 );

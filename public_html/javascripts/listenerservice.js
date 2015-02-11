@@ -5,15 +5,15 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     var pastecount = 20;
     this.bindListeners = function () {
         document.onkeydown = onKeyDownHandler;
-        SocketIoService.syncClient(syncClient);
-        SocketIoService.updateCanvas(updateCanvas);
-        SocketIoService.writing(writing);
-        SocketIoService.moving(updateFabricObject);
-        SocketIoService.rotating(updateFabricObject);
-        SocketIoService.scaling(updateFabricObject);
-        SocketIoService.addObject(addObject);
-        SocketIoService.removeObject(removeObject);
-        SocketIoService.reconnect(UserService.user());
+        SocketIoService.receive().syncClient(syncClient);
+        SocketIoService.receive().updateCanvas(updateCanvas);
+        SocketIoService.receive().writing(writing);
+        SocketIoService.receive().moving(updateFabricObject);
+        SocketIoService.receive().rotating(updateFabricObject);
+        SocketIoService.receive().scaling(updateFabricObject);
+        SocketIoService.receive().addObject(addObject);
+        SocketIoService.receive().removeObject(removeObject);
+        SocketIoService.receive().reconnect(UserService.user());
 
     }
 

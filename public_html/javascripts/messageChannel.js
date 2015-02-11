@@ -3,7 +3,7 @@ nwmApplication.directive('messagechannel', ['SocketIoService', '$timeout', funct
         restrict: 'E',
         scope: '',
         controller: function ($scope,  $element) {
-            SocketIoService.messageChannel(messageChannel);
+            SocketIoService.receive().messageChannel(messageChannel);
             function messageChannel(msg){
                 $scope.messageChannel = msg;
                 $element.find('.alert').addClass('in');
