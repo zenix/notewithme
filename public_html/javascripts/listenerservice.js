@@ -2,7 +2,7 @@
 nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils','UserService', function ($window, FabricService, SocketIoService, Utils, UserService) {
     var self = this;
     var copiedObjects = new Array();
-    var pastecount = 20;
+    var pastePixelsToAddComparedToOriginal = 20;
     this.bindListeners = function () {
         document.onkeydown = onKeyDownHandler;
         SocketIoService.receive().syncClient(syncClient);
@@ -78,23 +78,31 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
          */
         if (FabricService.canvas().getActiveObject()) {
             copiedObjects[0] = FabricService.canvas().getActiveObject();
-            pastecount = 20;
+            pastePixelsToAddComparedToOriginal = 20;
         }
     }
 
     function paste() {
+        function correctPosition(clonedFabricObject, fabricObject) {
+            clonedFabricObject.set("top", fabricObject.top + pastePixelsToAddComparedToOriginal);
+            clonedFabricObject.set("left", fabricObject.left + pastePixelsToAddComparedToOriginal);
+            pastePixelsToAddComparedToOriginal = pastePixelsToAddComparedToOriginal + 20;
+        }
+
+        function sendOverWire(clonedFabricObject) {
+            var json = JSON.stringify(clonedFabricObject);
+            SocketIoService.send().addObject(json);
+        }
+
         if (copiedObjects.length > 0) {
             copiedObjects.forEach(function (fabricObject) {
                 var clonedFabricObject = fabricObject.clone();
-                clonedFabricObject.set("top", fabricObject.top + pastecount);
-                clonedFabricObject.set("left", fabricObject.left + pastecount);
-                pastecount = pastecount + 20;
+                correctPosition(clonedFabricObject, fabricObject);
                 clonedFabricObject.objectId = Utils.guid();
                 removeAllListeners(clonedFabricObject);
                 self.attachListenersToFabricObject(clonedFabricObject);
                 FabricService.canvas().add(clonedFabricObject);
-                var json = JSON.stringify(clonedFabricObject);
-                SocketIoService.send().addObject(json);
+                sendOverWire(clonedFabricObject);
             })
         }
         FabricService.canvas().renderAll();
