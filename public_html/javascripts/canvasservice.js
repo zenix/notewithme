@@ -1,18 +1,6 @@
 'use strict';
 nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
     var self = this;
-    this.getCanvasAsBase64 = function(imagetype){
-        return FabricService.canvas().toDataURL(imagetype);
-    }
-
-    this.saveCanvas = function(){
-        SocketIoService.send().saveCanvas(
-            {
-                randomString: UserService.user().randomString,
-                room: UserService.user().room,
-                canvas: JSON.stringify(FabricService.canvas())
-            });
-    };
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
@@ -21,6 +9,38 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow}
     ];
 
+    this.start = function () {
+        SocketIoService.send().joinRoom(UserService.user());
+        FabricService.createCanvas();
+        FabricService.addObjectIdToPrototype();
+        ListenerService.bindListeners();
+
+        //FabricService.selectionCreated(selectionCreated);
+        function selectionCreated(options) {
+            var fabricObject = options.target;
+            fabricObject.objectId = Utils.guid();
+            var fabricObjectJson = JSON.stringify(fabricObject);
+            //todo: when selecting multiple, position might be incorrect in clients
+            //todo: sometimes duplication when moving
+            SocketIoService.send().addObject(fabricObjectJson);
+            ListenerService.attachListenersToFabricObject(fabricObject);
+        }
+    }
+
+    this.getCanvasAsBase64 = function(imagetype){
+        return FabricService.canvas().toDataURL(imagetype);
+    };
+    this.canvasTools = function () {
+        return canvasToolOptions;
+    };
+    this.saveCanvas = function(){
+        SocketIoService.send().saveCanvas(
+            {
+                randomString: UserService.user().randomString,
+                room: UserService.user().room,
+                canvas: JSON.stringify(FabricService.canvas())
+            });
+    };
     function canvasToolNone() {
         FabricService.canvas().isDrawingMode = false;
         FabricService.removeMouseDown();
@@ -91,9 +111,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     }
 
 
-    this.canvasTools = function () {
-        return canvasToolOptions;
-    }
+
     this.findActiveCanvasTool = function () {
         return canvasToolOptions.filter(function (tool) {
             if (tool.active) {
@@ -128,22 +146,5 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     this.calculateOffset = function () {
         FabricService.canvas().calcOffset();
     }
-    this.start = function ($scope) {
-        SocketIoService.send().joinRoom(UserService.user());
-        FabricService.createCanvas();
-        FabricService.addObjectIdToPrototype();
-        ListenerService.bindListeners();
 
-        //FabricService.selectionCreated(selectionCreated);
-        function selectionCreated(options) {
-
-            var fabricObject = options.target;
-            fabricObject.objectId = Utils.guid();
-            var fabricObjectJson = JSON.stringify(fabricObject);
-            //todo: when selecting multiple, position might be incorrect in clients
-            //todo: sometimes duplication when moving
-            SocketIoService.send().addObject(fabricObjectJson);
-            ListenerService.attachListenersToFabricObject(fabricObject);
-        }
-    }
 }])
