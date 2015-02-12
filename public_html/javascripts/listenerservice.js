@@ -166,11 +166,12 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     }
 
     function updateCanvas(message) {
-        FabricService.canvas().loadFromJSON(message.canvas);
-        FabricService.findObjects().forEach(function (fabricObject) {
-            self.attachListenersToFabricObject(fabricObject);
-        });
-        FabricService.canvas().renderAll();
+        var canvas = FabricService.canvas();
+        canvas.loadFromJSON(message.canvas, canvas.renderAll.bind(canvas),
+            function(fabricObject, fabricObjectClass){
+                self.attachListenersToFabricObject(fabricObjectClass);
+            });
+
     }
 
     function writing(message) {
@@ -198,13 +199,10 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     function addObject(message) {
         var jsonObject = JSON.parse(message);
         fabric.util.enlivenObjects([jsonObject], function (objects) {
-            var origRenderOnAddRemove = FabricService.canvas().renderOnAddRemove;
-            FabricService.canvas().renderOnAddRemove = false;
             objects.forEach(function (fabricObject) {
                 self.attachListenersToFabricObject(fabricObject);
                 FabricService.canvas().add(fabricObject);
             });
-            FabricService.canvas().renderOnAddRemove = origRenderOnAddRemove;
             FabricService.canvas().renderAll();
             FabricService.canvas().calcOffset();
         });
