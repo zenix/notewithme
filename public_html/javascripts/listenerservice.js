@@ -17,16 +17,6 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
 
     }
 
-    this.saveCanvas = function(message) {
-        SocketIoService.send().saveCanvas(
-            {
-                randomString: UserService.user().randomString,
-                room: UserService.user().room,
-                canvas: JSON.stringify(FabricService.canvas())
-            });
-    }
-
-
     function onKeyDownHandler(event) {
         var key;
         if (window.event) {

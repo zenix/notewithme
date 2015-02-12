@@ -6,8 +6,13 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     }
 
     this.saveCanvas = function(){
-        ListenerService.saveCanvas();
-    }
+        SocketIoService.send().saveCanvas(
+            {
+                randomString: UserService.user().randomString,
+                room: UserService.user().room,
+                canvas: JSON.stringify(FabricService.canvas())
+            });
+    };
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
