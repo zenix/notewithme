@@ -17,6 +17,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             var type = cbDataItem.type;
             if (type.indexOf("image")!=-1) {
                 var imageData = cbDataItem.getAsFile();
+                console.log(imageData);
                 var imageURL=window.webkitURL.createObjectURL(imageData);
                 FabricService.createImage(imageURL, function(img){
                     var oImg = img.set({ left: 50, top: 100, angle: 0 }).scale(0.2);
@@ -33,7 +34,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         SocketIoService.send().joinRoom(UserService.user());
         FabricService.createCanvas();
         FabricService.addObjectIdToPrototype();
-        //$window.addEventListener('paste',pasteImage);
+        $window.addEventListener('paste',pasteImage);
         ListenerService.bindListeners();
 
         //FabricService.selectionCreated(selectionCreated);
