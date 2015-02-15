@@ -1,8 +1,6 @@
 'use strict';
 nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils', 'UserService', function ($window, FabricService, SocketIoService, Utils, UserService) {
     var self = this;
-    var copiedObjects = new Array();
-    var pastePixelsToAddComparedToOriginal = 20;
     this.bindListeners = function () {
         document.onkeydown = onKeyDownHandler;
         $window.addEventListener('paste', pasteImage);
