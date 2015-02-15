@@ -31,7 +31,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     function duplicateObject(){
         var fabricObject = FabricService.canvas().getActiveObject();
         if(fabricObject){
-            var clonedFabricObject = fabricObject.clone();
+            var clonedFabricObject = fabric.util.object.clone(fabricObject);
             correctPosition(clonedFabricObject, fabricObject);
             clonedFabricObject.objectId = Utils.guid();
             ListenerService.removeAllListeners(clonedFabricObject);
