@@ -63,9 +63,11 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         return path;
     };
     this.createImage = function(url,fn){
-        var image = new fabric.Image.fromURL(url,fn);
-        image.objectId = Utils.guid();
-        return image;
+        return new fabric.Image.fromURL(url,function(img){
+            var oImg = img.set({ left: 50, top: 100, angle: 0 }).scale(0.3);
+            oImg.objectId = Utils.guid();
+            fn(oImg);
+        });
     };
     this.canvas = function () {
         return canvas;
