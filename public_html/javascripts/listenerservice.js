@@ -1,11 +1,11 @@
 'use strict';
-nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils','UserService', function ($window, FabricService, SocketIoService, Utils, UserService) {
+nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils', 'UserService', function ($window, FabricService, SocketIoService, Utils, UserService) {
     var self = this;
     var copiedObjects = new Array();
     var pastePixelsToAddComparedToOriginal = 20;
     this.bindListeners = function () {
         document.onkeydown = onKeyDownHandler;
-        $window.addEventListener('paste',pasteImage);
+        $window.addEventListener('paste', pasteImage);
         SocketIoService.receive().syncClient(syncClient);
         SocketIoService.receive().updateCanvas(updateCanvas);
         SocketIoService.receive().writing(writing);
@@ -19,16 +19,16 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     };
 
     function pasteImage(event) {
-        var cbData=event.clipboardData;
-        for(var i=0;i<cbData.items.length;i++){
+        var cbData = event.clipboardData;
+        for (var i = 0; i < cbData.items.length; i++) {
             var cbDataItem = cbData.items[i];
             var type = cbDataItem.type;
-            if (type.indexOf("image")!=-1) {
+            if (type.indexOf("image") != -1) {
                 var imageData = cbDataItem.getAsFile();
                 var fileReader = new FileReader();
 
-                fileReader.onload = function(event){
-                    FabricService.createImage(event.target.result, function(image){
+                fileReader.onload = function (event) {
+                    FabricService.createImage(event.target.result, function (image) {
                         self.attachListenersToFabricObject(image);
                         FabricService.canvas().add(image).renderAll();
                         var fabricObjectJson = JSON.stringify(image);
@@ -42,26 +42,27 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
 
     function onKeyDownHandler(event) {
         var key;
-        if (window.event) {key = window.event.keyCode;}
-        else {key = event.keyCode;}
+        if (window.event) {
+            key = window.event.keyCode;
+        }
+        else {
+            key = event.keyCode;
+        }
 
 
         switch (key) {
             case 67: // Ctrl+C
-                if (ableToShortcut()) {
-                    if (event.ctrlKey) {
-                        event.preventDefault();
-                        copy();
-                    }
+                if (event.ctrlKey) {
+                    event.preventDefault();
+                    copy();
                 }
                 break;
             case 86: // Ctrl+V
-                if (ableToShortcut()) {
-                    if (event.ctrlKey) {
-                        event.preventDefault();
-                        paste();
-                    }
+                if (event.ctrlKey) {
+                    event.preventDefault();
+                    paste();
                 }
+
                 break;
             case 46: //delete
                 event.preventDefault();
@@ -70,20 +71,6 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
             default:
                 break;
         }
-    }
-
-    function ableToShortcut() {
-        /*
-         TODO check all cases for this
-
-         if($("textarea").is(":focus")){
-         return false;
-         }
-         if($(":text").is(":focus")){
-         return false;
-         }
-         */
-        return true;
     }
 
     function copy() {
@@ -142,7 +129,10 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
 
         if (fabricObjectToAttach.type === 'i-text') {
             fabricObjectToAttach.on('changed', function (event) {
-                SocketIoService.send().writing({'objectId': fabricObjectToAttach.objectId, 'text': fabricObjectToAttach.text});
+                SocketIoService.send().writing({
+                    'objectId': fabricObjectToAttach.objectId,
+                    'text': fabricObjectToAttach.text
+                });
             });
         }
         function movingMessage(event) {
@@ -188,7 +178,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     function updateCanvas(message) {
         var canvas = FabricService.canvas();
         canvas.loadFromJSON(message.canvas, canvas.renderAll.bind(canvas),
-            function(fabricObject, fabricObjectClass){
+            function (fabricObject, fabricObjectClass) {
                 self.attachListenersToFabricObject(fabricObjectClass);
             });
 
