@@ -10,8 +10,8 @@
                     <h4 class="modal-title">Help</h4>
                 </div>
                 <div class="modal-body">
-                    <p>
-
+                    <p ng-repeat="tool in canvasTools">
+                        <span class="glyphicon {{tool.glyphiconicon}}" aria-hidden="true" title="None"></span>
                     </p>
                 </div>
                 <div class="modal-footer">

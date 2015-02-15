@@ -1,7 +1,10 @@
-nwmApplication.directive('help', function () {
+nwmApplication.directive('help', ['CanvasService', function (CanvasService) {
     return {
         restrict: 'E',
         scope: '',
+        link:function($scope){
+          $scope.canvasTools = CanvasService.canvasTools();
+        },
         controller: function ($scope) {
             $scope.help = function () {
                 if (window.useAnalytics) {
@@ -11,4 +14,4 @@ nwmApplication.directive('help', function () {
         },
         templateUrl: 'directives/help.html'
     }
-});
+}]);
