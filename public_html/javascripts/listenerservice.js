@@ -4,7 +4,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     var copiedObjects = new Array();
     var pastePixelsToAddComparedToOriginal = 20;
     this.bindListeners = function () {
-        document.onkeydown = onKeyDownHandler;
+        //document.onkeydown = onKeyDownHandler;
         $window.addEventListener('paste', pasteImage);
         SocketIoService.receive().syncClient(syncClient);
         SocketIoService.receive().updateCanvas(updateCanvas);
@@ -105,7 +105,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                 var clonedFabricObject = fabricObject.clone();
                 correctPosition(clonedFabricObject, fabricObject);
                 clonedFabricObject.objectId = Utils.guid();
-                removeAllListeners(clonedFabricObject);
+                self.removeAllListeners(clonedFabricObject);
                 self.attachListenersToFabricObject(clonedFabricObject);
                 FabricService.canvas().add(clonedFabricObject);
                 sendOverWire(clonedFabricObject);
@@ -114,7 +114,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         FabricService.canvas().renderAll();
     }
 
-    function removeAllListeners(fabricObject) {
+     this.removeAllListeners = function(fabricObject) {
         fabricObject.off('moving');
         fabricObject.off('rotating');
         fabricObject.off('scaling');

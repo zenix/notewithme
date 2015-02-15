@@ -6,7 +6,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
         {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw},
         {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect},
-        {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow}
+        {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow},
+        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject}
     ];
 
     this.start = function () {
@@ -25,8 +26,30 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             SocketIoService.send().addObject(fabricObjectJson);
             ListenerService.attachListenersToFabricObject(fabricObject);
         }
-    }
+    };
 
+    function duplicateObject(){
+        var fabricObject = FabricService.canvas().getActiveObject();
+        if(fabricObject){
+            var clonedFabricObject = fabricObject.clone();
+            correctPosition(clonedFabricObject, fabricObject);
+            clonedFabricObject.objectId = Utils.guid();
+            ListenerService.removeAllListeners(clonedFabricObject);
+            ListenerService.attachListenersToFabricObject(clonedFabricObject);
+            FabricService.canvas().add(clonedFabricObject);
+            sendOverWire(clonedFabricObject);
+        }
+
+        function correctPosition(clonedFabricObject, fabricObject) {
+            clonedFabricObject.set("top", fabricObject.top + 20);
+            clonedFabricObject.set("left", fabricObject.left + 20);
+        }
+
+        function sendOverWire(clonedFabricObject) {
+            var json = JSON.stringify(clonedFabricObject);
+            SocketIoService.send().addObject(json);
+        }
+    };
     this.getCanvasAsBase64 = function(imagetype){
         return FabricService.canvas().toDataURL(imagetype);
     };
