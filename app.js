@@ -34,6 +34,7 @@ io.on('connection', function (socket) {
         function checkIfHasExistingCanvasAndUpdateCanvas() {
             var redisClient = redis.createClient();
             var room = getRoom(msg);
+            sendMessageToAllIn(room).emit('messageChannel', messageForChannel('Checking! ', 'If you have existing canvas...'));
             redisClient.get(room, function (err, canvas) {
                 if (canvas != '') {
                     console.log("Getting saved canvas:  " + room);
