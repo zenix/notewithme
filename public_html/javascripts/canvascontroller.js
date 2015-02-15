@@ -11,11 +11,15 @@ nwmApplication.controller('canvasController', ['$scope', '$location', '$routePar
     }
 
     function trackOpenLinkModal() {
-        ga('send', 'event', 'User Path', 'Link', 'Modal');
+        if(window.useAnalytics) {
+            ga('send', 'event', 'User Path', 'Link', 'Modal');
+        }
     }
 
     function trackStartFromLink() {
-        ga('send', 'event', 'User Path', 'Link Modal', 'Start');
+        if(window.useAnalytics) {
+            ga('send', 'event', 'User Path', 'Link Modal', 'Start');
+        }
     }
 
     function start() {

@@ -49,7 +49,6 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
             key = event.keyCode;
         }
 
-
         switch (key) {
             case 67: // Ctrl+C
                 if (event.ctrlKey) {

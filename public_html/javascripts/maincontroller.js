@@ -9,10 +9,14 @@ nwmApplication.controller('mainController', ['$scope', '$location', 'UserService
         $location.path('/r/' + UserService.user().randomString + '/' + user.room);
     }
     function trackStart() {
-        ga('send', 'event', 'User Path', 'Modal', 'Start');
+        if(window.useAnalytics) {
+            ga('send', 'event', 'User Path', 'Modal', 'Start');
+        }
     }
 
     $scope.trackModal = function () {
-        ga('send', 'event', 'User Path', 'Main Page', 'Open Modal');
+        if(window.useAnalytics) {
+            ga('send', 'event', 'User Path', 'Main Page', 'Open Modal');
+        }
     }
 }]);
