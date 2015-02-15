@@ -10,9 +10,21 @@
                     <h4 class="modal-title">Help</h4>
                 </div>
                 <div class="modal-body">
-                    <p ng-repeat="tool in canvasTools">
-                        <span class="glyphicon {{tool.glyphiconicon}}" aria-hidden="true" title="None"></span>
-                    </p>
+                    <div class="container-fluid">
+                        <div class="row"  ng-repeat="tool in canvasTools">
+                            <div class="col-md-2">
+                                <span class="glyphicon {{tool.glyphiconicon}}" aria-hidden="true" title="None" ></span>
+                            </div>
+                            <div class="col-md-3">
+                                <span>{{tool.name}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{tool.help}}</span>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="start" class="btn btn-primary"  data-dismiss="modal">Ok</button>
