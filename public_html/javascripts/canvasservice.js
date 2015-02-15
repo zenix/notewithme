@@ -36,19 +36,22 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             clonedFabricObject.objectId = Utils.guid();
             ListenerService.removeAllListeners(clonedFabricObject);
             ListenerService.attachListenersToFabricObject(clonedFabricObject);
-            FabricService.canvas().add(clonedFabricObject);
+            FabricService.canvas().add(clonedFabricObject).renderAll();
             sendOverWire(clonedFabricObject);
         }
 
         function correctPosition(clonedFabricObject, fabricObject) {
-            clonedFabricObject.set("top", fabricObject.top + 20);
-            clonedFabricObject.set("left", fabricObject.left + 20);
+            var random = Math.floor((Math.random() * 50) + 1);
+            clonedFabricObject.set("top", fabricObject.top + random);
+            clonedFabricObject.set("left", fabricObject.left + random);
         }
 
         function sendOverWire(clonedFabricObject) {
             var json = JSON.stringify(clonedFabricObject);
             SocketIoService.send().addObject(json);
         }
+        self.setActiveCanvasTool('None');
+
     };
     this.getCanvasAsBase64 = function(imagetype){
         return FabricService.canvas().toDataURL(imagetype);
