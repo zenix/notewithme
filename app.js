@@ -40,6 +40,7 @@ io.on('connection', function (socket) {
                     console.log("Getting saved canvas:  " + room);
                     sendMessageToAllIn(room).emit('updateCanvas', {canvas: canvas});
                 }
+                redisClient.quit();
             })
         }
 
@@ -76,6 +77,7 @@ io.on('connection', function (socket) {
         var room = getRoom(msg);
         redisClient.set(room, msg.canvas, redis.print);
         console.log("Saving: " + room);
+        redisClient.quit();
         sendMessageToAllIn(room).emit('messageChannel', messageForChannel('Success.', 'Canvas saved.'));
     })
 
