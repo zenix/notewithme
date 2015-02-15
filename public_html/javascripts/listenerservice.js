@@ -5,6 +5,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     var pastePixelsToAddComparedToOriginal = 20;
     this.bindListeners = function () {
         document.onkeydown = onKeyDownHandler;
+        $window.addEventListener('paste',pasteImage);
         SocketIoService.receive().syncClient(syncClient);
         SocketIoService.receive().updateCanvas(updateCanvas);
         SocketIoService.receive().writing(writing);
@@ -15,18 +16,36 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         SocketIoService.receive().removeObject(removeObject);
         SocketIoService.receive().reconnect(UserService.user());
 
-    }
+    };
+
+    function pasteImage(event) {
+        var cbData=event.clipboardData;
+        for(var i=0;i<cbData.items.length;i++){
+            var cbDataItem = cbData.items[i];
+            var type = cbDataItem.type;
+            if (type.indexOf("image")!=-1) {
+                var imageData = cbDataItem.getAsFile();
+                var fileReader = new FileReader();
+
+                fileReader.onload = function(event){
+                    FabricService.createImage(event.target.result, function(image){
+                        self.attachListenersToFabricObject(image);
+                        FabricService.canvas().add(image).renderAll();
+                        var fabricObjectJson = JSON.stringify(image);
+                        SocketIoService.send().addObject(fabricObjectJson);
+                    });
+                };
+                fileReader.readAsDataURL(imageData);
+            }
+        }
+    };
 
     function onKeyDownHandler(event) {
         var key;
-        if (window.event) {
-            key = window.event.keyCode;
-        }
-        else {
-            key = event.keyCode;
-        }
+        if (window.event) {key = window.event.keyCode;}
+        else {key = event.keyCode;}
 
-        /*
+
         switch (key) {
             case 67: // Ctrl+C
                 if (ableToShortcut()) {
@@ -50,7 +69,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                 break;
             default:
                 break;
-        }*/
+        }
     }
 
     function ableToShortcut() {

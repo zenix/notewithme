@@ -9,32 +9,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow}
     ];
 
-    function pasteImage(event) {
-
-        var cbData=event.clipboardData;
-        for(var i=0;i<cbData.items.length;i++){
-            var cbDataItem = cbData.items[i];
-            var type = cbDataItem.type;
-            if (type.indexOf("image")!=-1) {
-                var imageData = cbDataItem.getAsFile();
-                console.log(imageData);
-                var imageURL=window.webkitURL.createObjectURL(imageData);
-                FabricService.createImage(imageURL, function(img){
-                    var oImg = img.set({ left: 50, top: 100, angle: 0 }).scale(0.2);
-                    FabricService.canvas().add(oImg).renderAll();
-                    ListenerService.attachListenersToFabricObject(oImg);
-                    var fabricObjectJson = JSON.stringify(oImg);
-                    SocketIoService.send().addObject(fabricObjectJson);
-                });
-
-            }
-        }
-    }
     this.start = function () {
         SocketIoService.send().joinRoom(UserService.user());
         FabricService.createCanvas();
         FabricService.addObjectIdToPrototype();
-        $window.addEventListener('paste',pasteImage);
         ListenerService.bindListeners();
 
         //FabricService.selectionCreated(selectionCreated);
