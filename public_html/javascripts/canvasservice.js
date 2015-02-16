@@ -2,12 +2,12 @@
 nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
     var self = this;
     var canvasToolOptions = [
-        {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
-        {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
-        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw},
-        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect},
-        {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow},
-        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject}
+        {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone, help: 'Deactivate any tool'},
+        {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite, help: 'Write text'},
+        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw, help: 'Free draw with pencil'},
+        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect, help:'Add rectangle'},
+        {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow, help: 'Add arrow'},
+        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'}
     ];
 
     this.start = function () {
