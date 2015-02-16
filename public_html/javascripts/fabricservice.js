@@ -21,7 +21,8 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         fabric.Object.prototype.toObject = (function (toObject) {
             return function () {
                 return fabric.util.object.extend(toObject.call(this), {
-                    objectId: this.objectId
+                    objectId: this.objectId,
+                    timestamp: this.timestamp
                 });
             };
         })(fabric.Object.prototype.toObject);
