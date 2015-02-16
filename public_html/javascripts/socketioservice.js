@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.service('SocketIoService', function () {
+nwmApplication.service('SocketIoService', ['FabricService', function (FabricService) {
         var socket = io();
         var self = this;
         this.socket = function () {
@@ -35,6 +35,7 @@ nwmApplication.service('SocketIoService', function () {
                 emit('joinRoom', user);
             };
             function emit(action, message){
+                FabricService.createTimestampToCanvas();
                 socket.emit(action,message);
             };
 
@@ -102,5 +103,5 @@ nwmApplication.service('SocketIoService', function () {
 
             }
         }
-    }
+    }]
 );
