@@ -26,6 +26,7 @@ nwmApplication.service('SocketIoService', ['FabricService', function (FabricServ
                 emit('scaling', message);
             };
             function saveCanvas(message){
+                console.log(message.canvas)
                 emit('saveCanvas', message);
             };
             function syncClient(message){
@@ -62,7 +63,17 @@ nwmApplication.service('SocketIoService', ['FabricService', function (FabricServ
                 on('syncClient', fn);
             };
             function updateCanvas(fn) {
-                on('updateCanvas', fn);
+                on('updateCanvas', function(message){
+                    var serverCanvas = message.canvas;
+                    //console.log( 'Current: ' + FabricService.getCanvasTimestamp())
+                    //console.log( 'Server: ' + serverCanvas.timestamp)
+                    if(serverCanvas && serverCanvas.timestamp && FabricService.getCanvasTimestamp() > serverCanvas.timestamp){
+                        console.log("1")
+                        return;
+                    }
+                    console.log("2")
+                    fn(message);
+                });
             };
             function writing(fn) {
                 on('writing', fn);

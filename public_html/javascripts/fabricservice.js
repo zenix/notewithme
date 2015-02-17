@@ -8,6 +8,9 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         }
         canvas.timestamp = Date.now();
     };
+    this.getCanvasTimestamp = function(){
+        return canvas.timestamp;
+    };
     this.createCanvas = function () {
         canvas = new fabric.Canvas('mainCanvas');
         canvas.renderOnAddRemove = false;
@@ -17,15 +20,22 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         canvas.backgroundColor = '#ffffff';
         canvas.calcOffset();
     };
-    this.addObjectIdToPrototype = function () {
+    this.pimpFabricPrototypes = function () {
         fabric.Object.prototype.toObject = (function (toObject) {
             return function () {
                 return fabric.util.object.extend(toObject.call(this), {
-                    objectId: this.objectId,
-                    timestamp: this.timestamp
+                    objectId: this.objectId
                 });
             };
         })(fabric.Object.prototype.toObject);
+
+        /*fabric.StaticCanvas.prototype.toObject = (function (toObject) {
+            return function () {
+                return fabric.util.object.extend(toObject.call(this), {
+                    timestamp: this.timestamp
+                });
+            };
+        })(fabric.StaticCanvas.prototype.toObject);*/
     };
     this.createItext = function (options) {
         var iText = new fabric.IText('edit', {
