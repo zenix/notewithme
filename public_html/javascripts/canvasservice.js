@@ -2,38 +2,18 @@
 nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
     var self = this;
     var canvasToolOptions = [
-        {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone},
-        {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite},
-        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw},
-        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect},
-        {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow}
+        {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone, help: 'Deactivate any tool'},
+        {name: 'Write', glyphiconicon: 'glyphicon-font', active: false, fn: canvasToolWrite, help: 'Write text'},
+        {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw, help: 'Free draw with pencil'},
+        {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect, help:'Add rectangle'},
+        {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow, help: 'Add arrow'},
+        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'}
     ];
 
-    function pasteImage(event) {
-
-        var cbData=event.clipboardData;
-        for(var i=0;i<cbData.items.length;i++){
-            var cbDataItem = cbData.items[i];
-            var type = cbDataItem.type;
-            if (type.indexOf("image")!=-1) {
-                var imageData = cbDataItem.getAsFile();
-                var imageURL=window.webkitURL.createObjectURL(imageData);
-                FabricService.createImage(imageURL, function(img){
-                    var oImg = img.set({ left: 50, top: 100, angle: 0 }).scale(0.2);
-                    FabricService.canvas().add(oImg).renderAll();
-                    ListenerService.attachListenersToFabricObject(oImg);
-                    var fabricObjectJson = JSON.stringify(oImg);
-                    SocketIoService.send().addObject(fabricObjectJson);
-                });
-
-            }
-        }
-    }
     this.start = function () {
         SocketIoService.send().joinRoom(UserService.user());
         FabricService.createCanvas();
         FabricService.addObjectIdToPrototype();
-        //$window.addEventListener('paste',pasteImage);
         ListenerService.bindListeners();
 
         //FabricService.selectionCreated(selectionCreated);
@@ -46,8 +26,33 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             SocketIoService.send().addObject(fabricObjectJson);
             ListenerService.attachListenersToFabricObject(fabricObject);
         }
-    }
+    };
 
+    function duplicateObject(){
+        var fabricObject = FabricService.canvas().getActiveObject();
+        if(fabricObject){
+            var clonedFabricObject = fabric.util.object.clone(fabricObject);
+            correctPosition(clonedFabricObject, fabricObject);
+            clonedFabricObject.objectId = Utils.guid();
+            ListenerService.removeAllListeners(clonedFabricObject);
+            ListenerService.attachListenersToFabricObject(clonedFabricObject);
+            FabricService.canvas().add(clonedFabricObject).renderAll();
+            sendOverWire(clonedFabricObject);
+        }
+
+        function correctPosition(clonedFabricObject, fabricObject) {
+            var random = Math.floor((Math.random() * 50) + 1);
+            clonedFabricObject.set("top", fabricObject.top + random);
+            clonedFabricObject.set("left", fabricObject.left + random);
+        }
+
+        function sendOverWire(clonedFabricObject) {
+            var json = JSON.stringify(clonedFabricObject);
+            SocketIoService.send().addObject(json);
+        }
+        self.setActiveCanvasTool('None');
+
+    };
     this.getCanvasAsBase64 = function(imagetype){
         return FabricService.canvas().toDataURL(imagetype);
     };
