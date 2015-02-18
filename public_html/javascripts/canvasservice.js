@@ -16,7 +16,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         SocketIoService.send().joinRoom(UserService.user());
         ListenerService.bindListeners();
         FabricService.selectionCreated(selectionCreated);
-
+        FabricService.selectionCleared(selectionCleared);
         function selectionCreated(options) {
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
@@ -25,6 +25,14 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             //todo: sometimes duplication when moving
             SocketIoService.send().addObject(fabricObjectJson);
             ListenerService.attachListenersToFabricObject(fabricObject);
+            _.forEach(fabricObject._objects, function(object){
+                SocketIoService.send().removeObject({objectId: object.objectId})
+            });
+        }
+
+        function selectionCleared(options){
+            var fabricObject = options;
+            console.log(fabricObject);
         }
     };
 

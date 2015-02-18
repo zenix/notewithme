@@ -41,7 +41,7 @@
       "main": "./angular-route.min.js"
     },
     "lodash": {
-      "main": "dist/lodash.min.js"
+      "main": "lodash.min.js"
     },
     "socket.io-client": {
       "main": "./socket.io.js"
