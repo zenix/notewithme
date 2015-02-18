@@ -15,8 +15,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         FabricService.pimpFabricPrototypes();
         SocketIoService.send().joinRoom(UserService.user());
         ListenerService.bindListeners();
+        FabricService.selectionCreated(selectionCreated);
 
-        //FabricService.selectionCreated(selectionCreated);
         function selectionCreated(options) {
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();

@@ -16,7 +16,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         canvas.renderOnAddRemove = false;
         canvas.setWidth($window.innerWidth - 39);
         canvas.setHeight($window.innerHeight - 39);
-        canvas.selection = false;
+        //canvas.selection = false;
         canvas.backgroundColor = '#ffffff';
         canvas.calcOffset();
     };
