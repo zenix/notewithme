@@ -55,7 +55,7 @@ nwmApplication.service('SocketIoService', ['FabricService', function (FabricServ
 
         this.receive = function () {
             function reconnect (user) {
-                on('connect', function () {
+                socket.on('connect', function () {
                     self.send().joinRoom(user)
                 });
             };
@@ -90,10 +90,11 @@ nwmApplication.service('SocketIoService', ['FabricService', function (FabricServ
                 on('removeObject', fn);
             };
             function messageChannel(fn) {
-                on('messageChannel', fn);
+                socket.on('messageChannel', fn);
             };
 
             function on(action, fn){
+                FabricService.createTimestampToCanvas();
                 socket.on(action,fn);
             }
             return {
