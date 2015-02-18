@@ -91,7 +91,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     };
 
     this.selectionCleared = function (fn) {
-        canvas.on('selection:cleared', fn);
+        canvas.on('before:selection:cleared', fn);
     };
     this.pathCreated = function (fn) {
         canvas.on('path:created', fn);

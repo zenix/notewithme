@@ -31,8 +31,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
 
         function selectionCleared(options){
-            var fabricObject = options;
-            console.log(fabricObject);
+            var fabricObject = options.target;
+            console.log(fabricObject.type);
         }
     };
 
