@@ -64,7 +64,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             {
                 randomString: UserService.user().randomString,
                 room: UserService.user().room,
-                canvas: JSON.stringify(FabricService.canvas())
+                canvas: JSON.stringify(FabricService.canvas().toJSON(['timestamp']))
             });
     };
     function canvasToolNone() {

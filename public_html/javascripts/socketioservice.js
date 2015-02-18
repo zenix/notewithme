@@ -26,14 +26,14 @@ nwmApplication.service('SocketIoService', ['FabricService', function (FabricServ
                 emit('scaling', message);
             };
             function saveCanvas(message){
-                console.log(message.canvas)
                 emit('saveCanvas', message);
             };
             function syncClient(message){
                 emit('syncClient',message);
             };
             function joinRoom(user) {
-                emit('joinRoom', user);
+                //no need to timestamp, otherwise canvas is never read/updated
+                socket.emit('joinRoom', user);
             };
             function emit(action, message){
                 FabricService.createTimestampToCanvas();
@@ -64,14 +64,10 @@ nwmApplication.service('SocketIoService', ['FabricService', function (FabricServ
             };
             function updateCanvas(fn) {
                 on('updateCanvas', function(message){
-                    var serverCanvas = message.canvas;
-                    //console.log( 'Current: ' + FabricService.getCanvasTimestamp())
-                    //console.log( 'Server: ' + serverCanvas.timestamp)
-                    if(serverCanvas && serverCanvas.timestamp && FabricService.getCanvasTimestamp() > serverCanvas.timestamp){
-                        console.log("1")
+                    var jsonServerCanvas = JSON.parse(message.canvas);
+                    if(jsonServerCanvas && jsonServerCanvas.timestamp && parseInt(FabricService.getCanvasTimestamp()) > parseInt(jsonServerCanvas.timestamp)){
                         return;
                     }
-                    console.log("2")
                     fn(message);
                 });
             };

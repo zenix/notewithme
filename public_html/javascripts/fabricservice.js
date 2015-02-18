@@ -28,14 +28,6 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
                 });
             };
         })(fabric.Object.prototype.toObject);
-
-        /*fabric.StaticCanvas.prototype.toObject = (function (toObject) {
-            return function () {
-                return fabric.util.object.extend(toObject.call(this), {
-                    timestamp: this.timestamp
-                });
-            };
-        })(fabric.StaticCanvas.prototype.toObject);*/
     };
     this.createItext = function (options) {
         var iText = new fabric.IText('edit', {
