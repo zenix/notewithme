@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.service('SocketIoService', function () {
+nwmApplication.service('SocketIoService', ['FabricService', function (FabricService) {
         var socket = io();
         var self = this;
         this.socket = function () {
@@ -32,9 +32,11 @@ nwmApplication.service('SocketIoService', function () {
                 emit('syncClient',message);
             };
             function joinRoom(user) {
-                emit('joinRoom', user);
+                //no need to timestamp, otherwise canvas is never read/updated
+                socket.emit('joinRoom', user);
             };
             function emit(action, message){
+                FabricService.createTimestampToCanvas();
                 socket.emit(action,message);
             };
 
@@ -61,7 +63,13 @@ nwmApplication.service('SocketIoService', function () {
                 on('syncClient', fn);
             };
             function updateCanvas(fn) {
-                on('updateCanvas', fn);
+                on('updateCanvas', function(message){
+                    var jsonServerCanvas = JSON.parse(message.canvas);
+                    if(jsonServerCanvas && jsonServerCanvas.timestamp && parseInt(FabricService.getCanvasTimestamp()) > parseInt(jsonServerCanvas.timestamp)){
+                        return;
+                    }
+                    fn(message);
+                });
             };
             function writing(fn) {
                 on('writing', fn);
@@ -102,5 +110,5 @@ nwmApplication.service('SocketIoService', function () {
 
             }
         }
-    }
+    }]
 );

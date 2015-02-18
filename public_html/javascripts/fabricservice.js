@@ -8,6 +8,9 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         }
         canvas.timestamp = Date.now();
     };
+    this.getCanvasTimestamp = function(){
+        return canvas.timestamp;
+    };
     this.createCanvas = function () {
         canvas = new fabric.Canvas('mainCanvas');
         canvas.renderOnAddRemove = false;
@@ -17,7 +20,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         canvas.backgroundColor = '#ffffff';
         canvas.calcOffset();
     };
-    this.addObjectIdToPrototype = function () {
+    this.pimpFabricPrototypes = function () {
         fabric.Object.prototype.toObject = (function (toObject) {
             return function () {
                 return fabric.util.object.extend(toObject.call(this), {

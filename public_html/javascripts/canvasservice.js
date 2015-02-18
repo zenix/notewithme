@@ -11,9 +11,9 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     ];
 
     this.start = function () {
-        SocketIoService.send().joinRoom(UserService.user());
         FabricService.createCanvas();
-        FabricService.addObjectIdToPrototype();
+        FabricService.pimpFabricPrototypes();
+        SocketIoService.send().joinRoom(UserService.user());
         ListenerService.bindListeners();
 
         //FabricService.selectionCreated(selectionCreated);
@@ -64,7 +64,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             {
                 randomString: UserService.user().randomString,
                 room: UserService.user().room,
-                canvas: JSON.stringify(FabricService.canvas())
+                canvas: JSON.stringify(FabricService.canvas().toJSON(['timestamp']))
             });
     };
     function canvasToolNone() {
