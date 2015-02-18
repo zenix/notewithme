@@ -32,7 +32,15 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
 
         function selectionCleared(options){
             var fabricObject = options.target;
-            console.log(fabricObject.type);
+            //if persistent group..
+            if(fabricObject.type === 'group'){
+                SocketIoService.send().removeObject({objectId: fabricObject.objectId});
+                _.forEach(fabricObject._objects, function(object){
+                    var fabricObjectJson = JSON.stringify(object);
+                    console.log(fabricObjectJson)
+                    SocketIoService.send().addObject(fabricObjectJson);
+                });
+            }
         }
     };
 
