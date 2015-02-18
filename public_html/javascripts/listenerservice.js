@@ -119,7 +119,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
             function (fabricObject, fabricObjectClass) {
                 self.attachListenersToFabricObject(fabricObjectClass);
             });
-
+        FabricService.createTimestampToCanvas();
     }
 
     function writing(message) {
