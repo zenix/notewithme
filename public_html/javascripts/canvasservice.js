@@ -37,6 +37,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if(fabricObject.type === 'group'){
                 SocketIoService.send().removeObject({objectId: fabricObject.objectId});
                 _.forEach(fabricObject._objects, function(object){
+                    console.dir(object)
                     console.log(object.top + ' ' + object.left);
                     console.log(object.originX + ' ' + object.originY);
                     object.top = object.top * 1;
@@ -115,6 +116,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if (!options.target) {
                 var rect = FabricService.createRect(options);
                 createAndSyncFrom(rect);
+                console.log(rect.top + ' ' + rect.left);
                 ListenerService.attachListenersToFabricObject(rect);
                 self.setActiveCanvasTool('None');
                 FabricService.canvas().renderAll();
