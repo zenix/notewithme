@@ -74,17 +74,42 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
             });
         }
         function movingMessage(event) {
-            var message = createMessage(fabricObjectToAttach);
-            console.log(message)
-            SocketIoService.send().moving(message);
+            if(fabricObjectToAttach.type === 'group'){
+                _.forEach(fabricObjectToAttach._objects, function(object){
+                    var clone = object.clone();
+                    fabricObjectToAttach._restoreObjectState(clone);
+                    SocketIoService.send().moving(createMessage(clone));
+                });
+            }else {
+                SocketIoService.send().moving(createMessage(fabricObjectToAttach));
+            }
         }
 
         function rotatingObject(event) {
-            SocketIoService.send().rotating(createMessage(fabricObjectToAttach));
+            if(fabricObjectToAttach.type === 'group'){
+                _.forEach(fabricObjectToAttach._objects, function(object){
+                    var clone = object.clone();
+                    fabricObjectToAttach._restoreObjectState(clone);
+                    SocketIoService.send().rotating(createMessage(clone));
+                });
+            }else {
+                SocketIoService.send().rotating(createMessage(fabricObjectToAttach));
+            }
         }
 
         function scalingObject(event) {
-            SocketIoService.send().scaling(createMessage(fabricObjectToAttach));
+            if(fabricObjectToAttach.type === 'group'){
+                _.forEach(fabricObjectToAttach._objects, function(object){
+                    var clone = object.clone();
+                    fabricObjectToAttach._restoreObjectState(clone);
+                    SocketIoService.send().scaling(createMessage(clone));
+                });
+            }else {
+                SocketIoService.send().scaling(createMessage(fabricObjectToAttach));
+            }
+
+
+
         }
 
         function createMessage(fabricObject) {

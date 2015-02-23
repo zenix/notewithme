@@ -7,39 +7,38 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw, help: 'Free draw with pencil'},
         {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect, help:'Add rectangle'},
         {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow, help: 'Add arrow'},
-        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'},
-        {name: 'Group/Ungroup', glyphiconicon: 'glyphicon-magnet', active: false, fn: groupUngroupObject, help: 'Group or ungroup objects'}
+        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'}
     ];
-    function groupUngroupObject(){
-        console.log(FabricService.canvas().getActiveObject());
-        self.setActiveCanvasTool('None');
-    }
-
 
     this.start = function () {
         FabricService.createCanvas();
         FabricService.pimpFabricPrototypes();
         SocketIoService.send().joinRoom(UserService.user());
         ListenerService.bindListeners();
-        //FabricService.selectionCreated(selectionCreated);
-        //FabricService.selectionCleared(selectionCleared);
+        FabricService.selectionCreated(selectionCreated);
+        FabricService.selectionCleared(selectionCleared);
         function selectionCreated(options) {
+            if(options.target.type === 'group') {
+                ListenerService.attachListenersToFabricObject(options.target);
+            }
+            /*
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
             var fabricObjectJson = JSON.stringify(fabricObject);
-            //todo: when selecting multiple, position might be incorrect in clients
-            //todo: sometimes duplication when moving
             SocketIoService.send().addObject(fabricObjectJson);
             ListenerService.attachListenersToFabricObject(fabricObject);
             _.forEach(fabricObject._objects, function(object){
                 SocketIoService.send().removeObject({objectId: object.objectId})
-            });
+            });*/
         }
 
         function selectionCleared(options){
-            var fabricObject = options.target;
-            //if persistent group..
+            if(options.target.type === 'group') {
+                ListenerService.removeAllListeners(options.target);
+            }
+           /* var fabricObject = options.target;
             if(fabricObject.type === 'group'){
+
                 SocketIoService.send().removeObject({objectId: fabricObject.objectId});
                 _.forEach(fabricObject._objects, function(object){
                     var clone = object.clone();
@@ -47,7 +46,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
                     var fabricObjectJson = JSON.stringify(clone);
                     SocketIoService.send().addObject(fabricObjectJson);
                 });
-            }
+            }*/
         }
     };
 
