@@ -73,6 +73,8 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                 });
             });
         }
+        //TODO: refactor
+        //TODO: When group is selected, and someone is moving one of those objects -> needs to deactivate group
         function movingMessage(event) {
             if(fabricObjectToAttach.type === 'group'){
                 _.forEach(fabricObjectToAttach._objects, function(object){
