@@ -7,16 +7,22 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw, help: 'Free draw with pencil'},
         {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect, help:'Add rectangle'},
         {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow, help: 'Add arrow'},
-        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'}
+        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'},
+        {name: 'Group/Ungroup', glyphiconicon: 'glyphicon-magnet', active: false, fn: groupUngroupObject, help: 'Group or ungroup objects'}
     ];
+    function groupUngroupObject(){
+        console.log(FabricService.canvas().getActiveObject());
+        self.setActiveCanvasTool('None');
+    }
+
 
     this.start = function () {
         FabricService.createCanvas();
         FabricService.pimpFabricPrototypes();
         SocketIoService.send().joinRoom(UserService.user());
         ListenerService.bindListeners();
-        FabricService.selectionCreated(selectionCreated);
-        FabricService.selectionCleared(selectionCleared);
+        //FabricService.selectionCreated(selectionCreated);
+        //FabricService.selectionCleared(selectionCleared);
         function selectionCreated(options) {
             var fabricObject = options.target;
             fabricObject.objectId = Utils.guid();
@@ -33,7 +39,6 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         function selectionCleared(options){
             var fabricObject = options.target;
             //if persistent group..
-            console.log(fabricObject.top + ' ' + fabricObject.left);
             if(fabricObject.type === 'group'){
                 SocketIoService.send().removeObject({objectId: fabricObject.objectId});
                 _.forEach(fabricObject._objects, function(object){
@@ -113,7 +118,6 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if (!options.target) {
                 var rect = FabricService.createRect(options);
                 createAndSyncFrom(rect);
-                console.log(rect.top + ' ' + rect.left);
                 ListenerService.attachListenersToFabricObject(rect);
                 self.setActiveCanvasTool('None');
                 FabricService.canvas().renderAll();

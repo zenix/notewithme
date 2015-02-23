@@ -77,6 +77,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     };
     this.findObjectFromCanvasWith = function (objectId) {
         return canvas.getObjects().filter(function (object) {
+            console.log(object.objectId)
             if (object.objectId === objectId) {
                 return true;
             }

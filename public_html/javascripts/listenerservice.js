@@ -74,7 +74,9 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
             });
         }
         function movingMessage(event) {
-            SocketIoService.send().moving(createMessage(fabricObjectToAttach));
+            var message = createMessage(fabricObjectToAttach);
+            console.log(message)
+            SocketIoService.send().moving(message);
         }
 
         function rotatingObject(event) {
