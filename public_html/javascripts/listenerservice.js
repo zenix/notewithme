@@ -73,44 +73,29 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                 });
             });
         }
-        //TODO: refactor
+
         function movingMessage(event) {
-            if(fabricObjectToAttach.type === 'group'){
-                _.forEach(fabricObjectToAttach._objects, function(object){
-                    var clone = object.clone();
-                    fabricObjectToAttach._restoreObjectState(clone);
-                    SocketIoService.send().moving(createMessage(clone));
-                });
-            }else {
-                SocketIoService.send().moving(createMessage(fabricObjectToAttach));
-            }
+            send( SocketIoService.send().moving);
         }
 
         function rotatingObject(event) {
-            if(fabricObjectToAttach.type === 'group'){
-                _.forEach(fabricObjectToAttach._objects, function(object){
-                    var clone = object.clone();
-                    fabricObjectToAttach._restoreObjectState(clone);
-                    SocketIoService.send().rotating(createMessage(clone));
-                });
-            }else {
-                SocketIoService.send().rotating(createMessage(fabricObjectToAttach));
-            }
+           send(SocketIoService.send().rotating);
         }
 
         function scalingObject(event) {
+           send(SocketIoService.send().scaling);
+        }
+
+        function send(fn){
             if(fabricObjectToAttach.type === 'group'){
                 _.forEach(fabricObjectToAttach._objects, function(object){
                     var clone = object.clone();
                     fabricObjectToAttach._restoreObjectState(clone);
-                    SocketIoService.send().scaling(createMessage(clone));
+                    fn(createMessage(clone));
                 });
             }else {
-                SocketIoService.send().scaling(createMessage(fabricObjectToAttach));
+                fn(createMessage(fabricObjectToAttach));
             }
-
-
-
         }
 
         function createMessage(fabricObject) {
