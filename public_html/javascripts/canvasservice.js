@@ -22,32 +22,12 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if(options.target.type === 'group') {
                 ListenerService.attachListenersToFabricObject(options.target);
             }
-            /*
-            var fabricObject = options.target;
-            fabricObject.objectId = Utils.guid();
-            var fabricObjectJson = JSON.stringify(fabricObject);
-            SocketIoService.send().addObject(fabricObjectJson);
-            ListenerService.attachListenersToFabricObject(fabricObject);
-            _.forEach(fabricObject._objects, function(object){
-                SocketIoService.send().removeObject({objectId: object.objectId})
-            });*/
         }
 
         function selectionCleared(options){
             if(options.target.type === 'group') {
                 ListenerService.removeAllListeners(options.target);
             }
-           /* var fabricObject = options.target;
-            if(fabricObject.type === 'group'){
-
-                SocketIoService.send().removeObject({objectId: fabricObject.objectId});
-                _.forEach(fabricObject._objects, function(object){
-                    var clone = object.clone();
-                    fabricObject._restoreObjectState(clone);
-                    var fabricObjectJson = JSON.stringify(clone);
-                    SocketIoService.send().addObject(fabricObjectJson);
-                });
-            }*/
         }
     };
 
