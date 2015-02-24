@@ -73,16 +73,29 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                 });
             });
         }
+
         function movingMessage(event) {
-            SocketIoService.send().moving(createMessage(fabricObjectToAttach));
+            send( SocketIoService.send().moving);
         }
 
         function rotatingObject(event) {
-            SocketIoService.send().rotating(createMessage(fabricObjectToAttach));
+           send(SocketIoService.send().rotating);
         }
 
         function scalingObject(event) {
-            SocketIoService.send().scaling(createMessage(fabricObjectToAttach));
+           send(SocketIoService.send().scaling);
+        }
+
+        function send(fn){
+            if(fabricObjectToAttach.type === 'group'){
+                _.forEach(fabricObjectToAttach._objects, function(object){
+                    var clone = object.clone();
+                    fabricObjectToAttach._restoreObjectState(clone);
+                    fn(createMessage(clone));
+                });
+            }else {
+                fn(createMessage(fabricObjectToAttach));
+            }
         }
 
         function createMessage(fabricObject) {
@@ -129,19 +142,21 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     }
 
     function updateFabricObject(message) {
+        FabricService.canvas().deactivateAll();
         var object = FabricService.findObjectFromCanvasWith(message.objectId);
         setFabricObjectInfo(object, message);
         FabricService.canvas().renderAll();
     }
 
     function setFabricObjectInfo(fabricObject, message) {
-        fabricObject.angle = message.angle;
-        fabricObject.scaleX = message.scaleX;
-        fabricObject.scaleY = message.scaleY;
-        fabricObject.top = message.top;
-        fabricObject.left = message.left;
-        fabricObject.originX = message.originX;
-        fabricObject.originY = message.originY;
+        fabricObject.setAngle(message.angle);
+        fabricObject.setScaleX(message.scaleX);
+        fabricObject.setScaleY(message.scaleY);
+        fabricObject.setTop(message.top);
+        fabricObject.setLeft(message.left);
+        fabricObject.setOriginX(message.originX);
+        fabricObject.setOriginY(message.originY);
+        fabricObject.setCoords();
     }
 
     function addObject(message) {

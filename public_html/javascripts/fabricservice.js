@@ -16,7 +16,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         canvas.renderOnAddRemove = false;
         canvas.setWidth($window.innerWidth - 39);
         canvas.setHeight($window.innerHeight - 39);
-        canvas.selection = false;
+        //canvas.selection = false;
         canvas.backgroundColor = '#ffffff';
         canvas.calcOffset();
     };
@@ -88,6 +88,10 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     };
     this.selectionCreated = function (fn) {
         canvas.on('selection:created', fn);
+    };
+
+    this.selectionCleared = function (fn) {
+        canvas.on('before:selection:cleared', fn);
     };
     this.pathCreated = function (fn) {
         canvas.on('path:created', fn);
