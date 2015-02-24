@@ -7,7 +7,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw, help: 'Free draw with pencil'},
         {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect, help:'Add rectangle'},
         {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow, help: 'Add arrow'},
-        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'}
+        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'},
+        {name: 'Group/Ungroup', glyphiconicon: 'glyphicon-magnet', active: false, fn: groupUngroupObjects, help: 'Group or Ungroup objects'}
     ];
 
     this.start = function () {
@@ -49,6 +50,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             }*/
         }
     };
+
+    function groupUngroupObjects(){
+        self.setActiveCanvasTool('None');
+    }
 
     function duplicateObject(){
         var fabricObject = FabricService.canvas().getActiveObject();
