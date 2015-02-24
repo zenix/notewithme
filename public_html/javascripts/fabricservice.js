@@ -24,7 +24,8 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         fabric.Object.prototype.toObject = (function (toObject) {
             return function () {
                 return fabric.util.object.extend(toObject.call(this), {
-                    objectId: this.objectId
+                    objectId: this.objectId,
+                    isPersistent: this.isPersistent
                 });
             };
         })(fabric.Object.prototype.toObject);
@@ -75,6 +76,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     this.createGroup = function(objectList){
         var group = new fabric.Group(objectList);
         group.objectId = Utils.guid();
+        group.isPersistent = true;
         return group;
     }
     this.canvas = function () {

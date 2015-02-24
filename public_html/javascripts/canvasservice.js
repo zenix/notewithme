@@ -55,19 +55,39 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     //TODO: ungrouping
     function groupUngroupObjects(){
         var activeGroup = FabricService.canvas().getActiveGroup();
-        if(activeGroup){
-            FabricService.canvas().deactivateAll();
-            var groupableObjects = [];
-            _.forEach(activeGroup._objects, function(object){
-                var cloneGroupableObject = object.clone();
-               FabricService.removeObject(object.objectId);
-                groupableObjects.push(cloneGroupableObject)
-            });
-            FabricService.canvas().add(FabricService.createGroup(groupableObjects));
-            FabricService.canvas().renderAll();
+        var activeObject = FabricService.canvas().getActiveObject();
+        if(activeGroup && !activeGroup.isPersistent){
+            group(activeGroup);
+        }else if(activeObject && activeObject.isPersistent){
+            ungroup(activeObject);
         }
 
         self.setActiveCanvasTool('None');
+
+        function ungroup(activeObject){
+            var objects = activeObject._objects;
+            FabricService.canvas().deactivateAll();
+            activeObject._restoreObjectsState();
+            ListenerService.removeAllListeners(activeObject);
+            FabricService.removeObject(activeObject.objectId);
+            _.forEach(objects, function (object) {
+               FabricService.canvas().add(object);
+            });
+            FabricService.canvas().renderAll();
+        }
+        function group(activeGroup) {
+            FabricService.canvas().deactivateAll();
+            var groupableObjects = [];
+            _.forEach(activeGroup._objects, function (object) {
+                var cloneGroupableObject = object.clone();
+                FabricService.removeObject(object.objectId);
+                groupableObjects.push(cloneGroupableObject)
+            });
+            var group = FabricService.createGroup(groupableObjects);
+            ListenerService.attachListenersToFabricObject(group);
+            FabricService.canvas().add(group);
+            FabricService.canvas().renderAll();
+        }
     }
 
     function duplicateObject(){
