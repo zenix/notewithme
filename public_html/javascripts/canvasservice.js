@@ -51,8 +51,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
     };
 
-    //TODO: send only individual objects over wire, not groups (sync/save??? groups or individual objects.. or the ones version which is saving)
-    //TODO: ungrouping
+    //TODO: If other side is moving something in group.. and otherside is not having the group. What todo? Should just send persistent groups over wire or ungroup automatically
+    //TODO:
     function groupUngroupObjects(){
         var activeGroup = FabricService.canvas().getActiveGroup();
         var activeObject = FabricService.canvas().getActiveObject();
