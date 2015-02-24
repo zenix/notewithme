@@ -149,13 +149,14 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     }
 
     function setFabricObjectInfo(fabricObject, message) {
-        fabricObject.angle = message.angle;
-        fabricObject.scaleX = message.scaleX;
-        fabricObject.scaleY = message.scaleY;
-        fabricObject.top = message.top;
-        fabricObject.left = message.left;
-        fabricObject.originX = message.originX;
-        fabricObject.originY = message.originY;
+        fabricObject.setAngle(message.angle);
+        fabricObject.setScaleX(message.scaleX);
+        fabricObject.setScaleY(message.scaleY);
+        fabricObject.setTop(message.top);
+        fabricObject.setLeft(message.left);
+        fabricObject.setOriginX(message.originX);
+        fabricObject.setOriginY(message.originY);
+        fabricObject.setCoords();
     }
 
     function addObject(message) {
