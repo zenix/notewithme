@@ -52,6 +52,19 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
     };
 
     function groupUngroupObjects(){
+        var activeGroup = FabricService.canvas().getActiveGroup();
+        if(activeGroup){
+            FabricService.canvas().deactivateAll();
+            var groupableObjects = [];
+            _.forEach(activeGroup._objects, function(object){
+                var cloneGroupableObject = object.clone();
+               FabricService.removeObject(object.objectId);
+                groupableObjects.push(cloneGroupableObject)
+            });
+            FabricService.canvas().add(FabricService.createGroup(groupableObjects));
+            FabricService.canvas().renderAll();
+        }
+
         self.setActiveCanvasTool('None');
     }
 

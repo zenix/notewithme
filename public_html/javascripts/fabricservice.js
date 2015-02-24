@@ -72,6 +72,11 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
             fn(oImg);
         });
     };
+    this.createGroup = function(objectList){
+        var group = new fabric.Group(objectList);
+        group.objectId = Utils.guid();
+        return group;
+    }
     this.canvas = function () {
         return canvas;
     };
