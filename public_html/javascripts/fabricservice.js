@@ -90,6 +90,21 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
             return false;
         })[0];
     };
+    this.findObjectAndGroupFromAllGroups = function(objectId){
+        var returnable = {'group':'', 'object': ''};
+        _.forEach(self.findObjects(),function(possibleGroup){
+            if(possibleGroup.type === 'group'){
+                return _.forEach(possibleGroup._objects, function(objectToFind){
+                    if(objectToFind.objectId == objectId){
+                        returnable.group = possibleGroup;
+                        returnable.object = objectToFind;
+                    }
+                });
+            }
+        });
+        return returnable;
+
+    };
     this.findObjects = function () {
         return canvas.getObjects();
     };
