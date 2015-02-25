@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
+nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService','GroupService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService, GroupService) {
     var self = this;
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone, help: 'Deactivate any tool'},
@@ -37,37 +37,12 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         var activeGroup = FabricService.canvas().getActiveGroup();
         var activeObject = FabricService.canvas().getActiveObject();
         if(activeGroup && !activeGroup.isPersistent){
-            group(activeGroup);
+            GroupService.group(activeGroup);
         }else if(activeObject && activeObject.isPersistent){
-            ungroup(activeObject);
+            GroupService.ungroup(activeObject);
         }
 
         self.setActiveCanvasTool('None');
-
-        function ungroup(activeObject){
-            var objects = activeObject._objects;
-            FabricService.canvas().deactivateAll();
-            activeObject._restoreObjectsState();
-            ListenerService.removeAllListeners(activeObject);
-            FabricService.removeObject(activeObject.objectId);
-            _.forEach(objects, function (object) {
-               FabricService.canvas().add(object);
-            });
-            FabricService.canvas().renderAll();
-        }
-        function group(activeGroup) {
-            FabricService.canvas().deactivateAll();
-            var groupableObjects = [];
-            _.forEach(activeGroup._objects, function (object) {
-                var cloneGroupableObject = object.clone();
-                FabricService.removeObject(object.objectId);
-                groupableObjects.push(cloneGroupableObject)
-            });
-            var group = FabricService.createGroup(groupableObjects);
-            ListenerService.attachListenersToFabricObject(group);
-            FabricService.canvas().add(group);
-            FabricService.canvas().renderAll();
-        }
     }
 
     function duplicateObject(){
