@@ -1,11 +1,11 @@
 'use strict';
-nwmApplication.service('GroupService', ['FabricService', 'ListenerService', function (FabricService, ListenerService) {
+nwmApplication.service('GroupService', ['FabricService', function (FabricService) {
 
+    //TODO: move to FabricService
     this.ungroup = function(activeObject){
         var objects = activeObject._objects;
         FabricService.canvas().deactivateAll();
         activeObject._restoreObjectsState();
-        ListenerService.removeAllListeners(activeObject);
         FabricService.removeObject(activeObject.objectId);
         _.forEach(objects, function (object) {
             FabricService.canvas().add(object);
@@ -21,8 +21,8 @@ nwmApplication.service('GroupService', ['FabricService', 'ListenerService', func
             groupableObjects.push(cloneGroupableObject)
         });
         var group = FabricService.createGroup(groupableObjects);
-        ListenerService.attachListenersToFabricObject(group);
         FabricService.canvas().add(group);
         FabricService.canvas().renderAll();
+        return group;
     }
 }]);

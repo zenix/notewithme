@@ -37,8 +37,10 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         var activeGroup = FabricService.canvas().getActiveGroup();
         var activeObject = FabricService.canvas().getActiveObject();
         if(activeGroup && !activeGroup.isPersistent){
-            GroupService.group(activeGroup);
+            var group = GroupService.group(activeGroup);
+            ListenerService.attachListenersToFabricObject(group);
         }else if(activeObject && activeObject.isPersistent){
+            ListenerService.removeAllListeners(activeObject);
             GroupService.ungroup(activeObject);
         }
 
