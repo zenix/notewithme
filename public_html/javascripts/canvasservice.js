@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService','GroupService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService, GroupService) {
+nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoService', 'UserService', 'Utils', 'FabricService', 'ListenerService', function ($routeParams, $window, SocketIoService, UserService, Utils, FabricService, ListenerService) {
     var self = this;
     var canvasToolOptions = [
         {name: 'None', glyphiconicon: 'glyphicon-off', active: false, fn: canvasToolNone, help: 'Deactivate any tool'},
@@ -31,17 +31,15 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
     };
 
-    //TODO: If other side is moving something in group.. and otherside is not having the group. What todo? Should just send persistent groups over wire or ungroup automatically
-    //TODO:
     function groupUngroupObjects(){
         var activeGroup = FabricService.canvas().getActiveGroup();
         var activeObject = FabricService.canvas().getActiveObject();
         if(activeGroup && !activeGroup.isPersistent){
-            var group = GroupService.group(activeGroup);
+            var group = FabricService.group(activeGroup);
             ListenerService.attachListenersToFabricObject(group);
         }else if(activeObject && activeObject.isPersistent){
             ListenerService.removeAllListeners(activeObject);
-            GroupService.ungroup(activeObject);
+            FabricService.ungroup(activeObject);
         }
 
         self.setActiveCanvasTool('None');

@@ -1,5 +1,5 @@
 'use strict';
-nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils', 'UserService','GroupService', function ($window, FabricService, SocketIoService, Utils, UserService,GroupService) {
+nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIoService', 'Utils', 'UserService', function ($window, FabricService, SocketIoService, Utils, UserService) {
     var self = this;
     this.bindListeners = function () {
         document.onkeydown = onKeyDownHandler;
@@ -149,7 +149,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
             var possibleGroup = groupAndObject.group;
             var objectToFind = groupAndObject.object;
             if(possibleGroup._objects.length  < 3){
-               GroupService.ungroup(possibleGroup);
+               FabricService.ungroup(possibleGroup);
             }else {
                 var cloned = objectToFind.clone();
                 possibleGroup._restoreObjectState(cloned);

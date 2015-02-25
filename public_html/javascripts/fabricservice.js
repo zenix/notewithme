@@ -140,4 +140,28 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         var object = self.findObjectFromCanvasWith(objectId);
         self.canvas().remove(object);
     };
+
+    this.ungroup = function(activeObject){
+        var objects = activeObject._objects;
+        self.canvas().deactivateAll();
+        activeObject._restoreObjectsState();
+        self.removeObject(activeObject.objectId);
+        _.forEach(objects, function (object) {
+            self.canvas().add(object);
+        });
+        self.canvas().renderAll();
+    }
+    this.group = function(activeGroup) {
+        self.canvas().deactivateAll();
+        var groupableObjects = [];
+        _.forEach(activeGroup._objects, function (object) {
+            var cloneGroupableObject = object.clone();
+            self.removeObject(object.objectId);
+            groupableObjects.push(cloneGroupableObject)
+        });
+        var group = self.createGroup(groupableObjects);
+        self.canvas().add(group);
+        self.canvas().renderAll();
+        return group;
+    }
 }]);
