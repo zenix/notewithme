@@ -145,6 +145,8 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         FabricService.canvas().deactivateAll();
         var object = FabricService.findObjectFromCanvasWith(message.objectId);
         if(!object){
+            //TODO: if group size == 2 then remove whole group
+            //TODO: separate group stuff somewhere nice
             _.forEach(FabricService.findObjects(),function(possibleGroup){
                if(possibleGroup.type === 'group'){
                    return _.forEach(possibleGroup._objects, function(objectToFind){
