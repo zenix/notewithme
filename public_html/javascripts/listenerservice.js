@@ -145,21 +145,27 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         FabricService.canvas().deactivateAll();
         var object = FabricService.findObjectFromCanvasWith(message.objectId);
         if(!object){
-            var original = _.map(FabricService.findObjects(),function(possibleGroup){
+            _.forEach(FabricService.findObjects(),function(possibleGroup){
                if(possibleGroup.type === 'group'){
-                   return _.find(possibleGroup._objects, function(objectToFind){
+                   return _.forEach(possibleGroup._objects, function(objectToFind){
                       if(objectToFind.objectId == message.objectId){
-                          return true;
+                          var cloned = objectToFind.clone();
+                          possibleGroup._restoreObjectState(cloned);
+                          possibleGroup.remove(objectToFind);
+                          FabricService.canvas().add(cloned);
+                          setFabricObjectInfo(cloned, message);
+                          FabricService.canvas().renderAll();
                       }
-                       return false;
+
                   });
                }
             });
 
-            console.log(original[0]);
+
+        }else {
+            setFabricObjectInfo(object, message);
+            FabricService.canvas().renderAll();
         }
-        setFabricObjectInfo(object, message);
-        FabricService.canvas().renderAll();
     }
 
     function setFabricObjectInfo(fabricObject, message) {
