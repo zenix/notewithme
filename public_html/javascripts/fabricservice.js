@@ -155,7 +155,6 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     this.group = function(activeGroup){
         self.canvas().deactivateAll();
         var groupableObjects = getAndRemoveObjects(activeGroup, []);
-        console.log(groupableObjects)
         var group = self.createGroup(groupableObjects);
         self.canvas().add(group);
         self.canvas().renderAll();
