@@ -144,6 +144,20 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     function updateFabricObject(message) {
         FabricService.canvas().deactivateAll();
         var object = FabricService.findObjectFromCanvasWith(message.objectId);
+        if(!object){
+            var original = _.map(FabricService.findObjects(),function(possibleGroup){
+               if(possibleGroup.type === 'group'){
+                   return _.find(possibleGroup._objects, function(objectToFind){
+                      if(objectToFind.objectId == message.objectId){
+                          return true;
+                      }
+                       return false;
+                  });
+               }
+            });
+
+            console.log(original[0]);
+        }
         setFabricObjectInfo(object, message);
         FabricService.canvas().renderAll();
     }
