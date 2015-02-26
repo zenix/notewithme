@@ -23,7 +23,8 @@
     "fabric": "~1.4.13",
     "lodash": "~3.1.0",
     "angular-socialshare": "~0.0.6",
-    "ng-contentful": "~0.1.2"
+    "ng-contentful": "~0.1.2",
+    "angular-marked": "Hypercubed/angular-marked#~0.0.12"
   },
   "overrides": {
     "jquery": {
@@ -49,6 +50,12 @@
     },
     "angular-socialshare": {
       "main": "./angular-socialshare.min.js"
+    },
+    "marked":{
+      "main": "./marked.min.js"
+    },
+    "angular-maked": {
+      "main": "angular-marked.min.js"
     }
   },
   "resolutions": {

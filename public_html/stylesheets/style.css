@@ -14,3 +14,8 @@
     color: #000000;
     cursor:pointer;
 }
+
+.normal p{
+    font-size: medium;
+    font-weight: normal;
+}
