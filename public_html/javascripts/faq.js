@@ -1,4 +1,4 @@
-nwmApplication.directive('news', ['ContentTypeList','contentfulClient',function (ContentTypeList, contentfulClient) {
+nwmApplication.directive('faq', ['ContentTypeList','contentfulClient',function (ContentTypeList, contentfulClient) {
     return {
         restrict: 'E',
         scope: {
@@ -17,6 +17,6 @@ nwmApplication.directive('news', ['ContentTypeList','contentfulClient',function 
                 $scope.entries = entries;
             });
         },
-        templateUrl: 'directives/news.html'
+        templateUrl: 'directives/faq.html'
     }
 }]);
