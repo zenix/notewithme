@@ -6,7 +6,7 @@ nwmApplication.directive('news', ['ContentTypeList','contentfulClient',function 
 
         },
         controller: function ($scope) {
-            ContentTypeList.getContentType('ContentTypeList');
+            ContentTypeList.getContentType('3nPYDRJT0cCQkEi42OC4qo');
             contentfulClient.entries().then(function(entries){
                 $scope.entries = entries;
             });

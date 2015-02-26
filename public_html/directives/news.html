@@ -1,1 +1,21 @@
-{{entries}}
+<div class="row" ng-repeat="entry in entries track by entry.sys.id" ng-controller="EntryController">
+
+    {{entryTitle()}}
+    <ul>
+        <li ng-repeat="field in contentType().fields track by field.id">
+            {{date}}
+            {{field.name}}: {{entry.fields[field.id]}}
+        </li>
+    </ul>
+</div>
+
+
+
+<div class="row" ng-repeat="field in entries">
+    <div class="row" ng>
+        <div class="col-md-12">
+            {{field}}
+        </div>
+    </div>
+
+</div>
