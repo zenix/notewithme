@@ -154,6 +154,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                 var cloned = objectToFind.clone();
                 possibleGroup._restoreObjectState(cloned);
                 possibleGroup.remove(objectToFind);
+                self.attachListenersToFabricObject(objectToFind);
                 FabricService.canvas().add(cloned);
                 setFabricObjectInfo(cloned, message);
                 FabricService.canvas().renderAll();
