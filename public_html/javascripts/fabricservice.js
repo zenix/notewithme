@@ -141,12 +141,14 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         self.canvas().remove(object);
     };
 
-    this.ungroup = function(activeObject){
+    //TODO: remove callback
+    this.ungroup = function(activeObject, fn){
         var objects = activeObject._objects;
         self.canvas().deactivateAll();
         activeObject._restoreObjectsState();
         self.removeObject(activeObject.objectId);
         _.forEach(objects, function (object) {
+            fn(object);
             self.canvas().add(object);
         });
         self.canvas().renderAll();
