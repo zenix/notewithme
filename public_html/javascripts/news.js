@@ -1,13 +1,20 @@
 nwmApplication.directive('news', ['ContentTypeList','contentfulClient',function (ContentTypeList, contentfulClient) {
     return {
         restrict: 'E',
-        scope: '',
+        scope: {
+            limit: '='
+        },
         link:function($scope){
 
         },
         controller: function ($scope) {
-            ContentTypeList.getContentType('3nPYDRJT0cCQkEi42OC4qo');
-            contentfulClient.entries().then(function(entries){
+            console.log()
+            var query = {
+                content_type: '3nPYDRJT0cCQkEi42OC4qo',
+                order: '-sys.createdAt',
+                limit: $scope.limit
+            };
+            contentfulClient.entries(query).then(function(entries){
                 $scope.entries = entries;
             });
         },
