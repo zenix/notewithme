@@ -8,3 +8,9 @@
     padding:10px;
     margin-bottom: 0px;
 }
+
+.startModal a{
+    text-decoration: none;
+    color: #000000;
+    cursor:pointer;
+}
