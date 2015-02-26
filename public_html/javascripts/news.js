@@ -1,4 +1,4 @@
-nwmApplication.directive('news', function (CanvasService) {
+nwmApplication.directive('news', ['ContentTypeList','contentfulClient',function (ContentTypeList, contentfulClient) {
     return {
         restrict: 'E',
         scope: '',
@@ -6,8 +6,11 @@ nwmApplication.directive('news', function (CanvasService) {
 
         },
         controller: function ($scope) {
-
+            ContentTypeList.getContentType('ContentTypeList');
+            contentfulClient.entries().then(function(entries){
+                $scope.entries = entries;
+            });
         },
         templateUrl: 'directives/news.html'
     }
-});
+}]);
