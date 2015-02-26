@@ -1,18 +1,25 @@
-<div class="row" ng-repeat="entry in entries">
-    <div class="row">
-        <div class="col-md-12">
-            <h4>{{entry.fields.title}}</h4>
-            <h5>{{entry.fields.date}}</h5>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">News</h3>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            {{entry.fields.content}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <hr/>
+    <div class="panel-body">
+        <div ng-repeat="entry in entries">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>{{entry.fields.title}}</h4>
+                    <h5>{{entry.fields.date}}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{entry.fields.content}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <hr/>
+                </div>
+            </div>
         </div>
     </div>
 </div>
