@@ -3,22 +3,22 @@
         <h3 class="panel-title">FAQ</h3>
     </div>
     <div class="panel-body">
-        Coming soon
         <div ng-repeat="entry in entries">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>{{entry.fields.TODO}}</h4>
-                    <h5>{{entry.fields.TODO}}</h5>
+            <div ng-repeat="faqentry in entry.fields.faqentries">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>{{faqentry.fields.title}}</h4>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {{entry.fields.TODO}}
+                <div class="row">
+                    <div class="col-md-12">
+                        {{faqentry.fields.content}}
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <hr/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <hr/>
+                    </div>
                 </div>
             </div>
         </div>

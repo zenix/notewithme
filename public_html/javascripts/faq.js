@@ -9,8 +9,7 @@ nwmApplication.directive('faq', ['ContentTypeList','contentfulClient',function (
         },
         controller: function ($scope) {
             var query = {
-                content_type: '3nPYDRJT0cCQkEi42OC4qo',
-                order: '-sys.createdAt',
+                content_type: '4EUsdXzsc0A2MWy8SkgCKE',
                 limit: $scope.limit
             };
             contentfulClient.entries(query).then(function(entries){
