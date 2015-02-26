@@ -7,7 +7,8 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Draw', glyphiconicon: 'glyphicon-pencil', active: false, fn: canvasToolDraw, help: 'Free draw with pencil'},
         {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect, help:'Add rectangle'},
         {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow, help: 'Add arrow'},
-        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'}
+        {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'},
+        {name: 'Group/Ungroup', glyphiconicon: 'glyphicon-magnet', active: false, fn: groupUngroupObjects, help: 'Group or Ungroup objects'}
     ];
 
     this.start = function () {
@@ -21,34 +22,28 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             if(options.target.type === 'group') {
                 ListenerService.attachListenersToFabricObject(options.target);
             }
-            /*
-            var fabricObject = options.target;
-            fabricObject.objectId = Utils.guid();
-            var fabricObjectJson = JSON.stringify(fabricObject);
-            SocketIoService.send().addObject(fabricObjectJson);
-            ListenerService.attachListenersToFabricObject(fabricObject);
-            _.forEach(fabricObject._objects, function(object){
-                SocketIoService.send().removeObject({objectId: object.objectId})
-            });*/
         }
 
         function selectionCleared(options){
             if(options.target.type === 'group') {
                 ListenerService.removeAllListeners(options.target);
             }
-           /* var fabricObject = options.target;
-            if(fabricObject.type === 'group'){
-
-                SocketIoService.send().removeObject({objectId: fabricObject.objectId});
-                _.forEach(fabricObject._objects, function(object){
-                    var clone = object.clone();
-                    fabricObject._restoreObjectState(clone);
-                    var fabricObjectJson = JSON.stringify(clone);
-                    SocketIoService.send().addObject(fabricObjectJson);
-                });
-            }*/
         }
     };
+
+    function groupUngroupObjects(){
+        var activeGroup = FabricService.canvas().getActiveGroup();
+        var activeObject = FabricService.canvas().getActiveObject();
+        if(activeGroup && !activeGroup.isPersistent){
+            var group = FabricService.group(activeGroup);
+            ListenerService.attachListenersToFabricObject(group);
+        }else if(activeObject && activeObject.isPersistent){
+            ListenerService.removeAllListeners(activeObject);
+            FabricService.ungroup(activeObject);
+        }
+
+        self.setActiveCanvasTool('None');
+    }
 
     function duplicateObject(){
         var fabricObject = FabricService.canvas().getActiveObject();

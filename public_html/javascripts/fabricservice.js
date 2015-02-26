@@ -24,7 +24,8 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         fabric.Object.prototype.toObject = (function (toObject) {
             return function () {
                 return fabric.util.object.extend(toObject.call(this), {
-                    objectId: this.objectId
+                    objectId: this.objectId,
+                    isPersistent: this.isPersistent
                 });
             };
         })(fabric.Object.prototype.toObject);
@@ -72,6 +73,12 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
             fn(oImg);
         });
     };
+    this.createGroup = function(objectList){
+        var group = new fabric.Group(objectList);
+        group.objectId = Utils.guid();
+        group.isPersistent = true;
+        return group;
+    }
     this.canvas = function () {
         return canvas;
     };
@@ -82,6 +89,21 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
             }
             return false;
         })[0];
+    };
+    this.findObjectAndGroupFromAllGroups = function(objectId){
+        var returnable = {'group':'', 'object': ''};
+        _.forEach(self.findObjects(),function(possibleGroup){
+            if(possibleGroup.type === 'group'){
+                return _.forEach(possibleGroup._objects, function(objectToFind){
+                    if(objectToFind.objectId == objectId){
+                        returnable.group = possibleGroup;
+                        returnable.object = objectToFind;
+                    }
+                });
+            }
+        });
+        return returnable;
+
     };
     this.findObjects = function () {
         return canvas.getObjects();
@@ -118,4 +140,39 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         var object = self.findObjectFromCanvasWith(objectId);
         self.canvas().remove(object);
     };
+
+    this.ungroup = function(activeObject){
+        var objects = activeObject._objects;
+        self.canvas().deactivateAll();
+        activeObject._restoreObjectsState();
+        self.removeObject(activeObject.objectId);
+        _.forEach(objects, function (object) {
+            self.canvas().add(object);
+        });
+        self.canvas().renderAll();
+    }
+
+    this.group = function(activeGroup){
+        self.canvas().deactivateAll();
+        var groupableObjects = getAndRemoveObjects(activeGroup, []);
+        var group = self.createGroup(groupableObjects);
+        self.canvas().add(group);
+        self.canvas().renderAll();
+        return group;
+    }
+    function getAndRemoveObjects(activeGroup, acc) {
+        _.forEach(activeGroup._objects, function (object) {
+            if(object.type === 'group'){
+                object._restoreObjectsState();
+                self.removeObject(object.objectId);
+                getAndRemoveObjects(object,acc);
+            }else {
+                var cloneGroupableObject = object.clone();
+                self.removeObject(object.objectId);
+                acc.push(cloneGroupableObject);
+            }
+        });
+
+        return acc;
+    }
 }]);
