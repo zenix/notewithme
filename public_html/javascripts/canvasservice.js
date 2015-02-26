@@ -39,7 +39,9 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             ListenerService.attachListenersToFabricObject(group);
         }else if(activeObject && activeObject.isPersistent){
             ListenerService.removeAllListeners(activeObject);
-            FabricService.ungroup(activeObject);
+            FabricService.ungroup(activeObject, function(object){
+                ListenerService.attachListenersToFabricObject(object);
+            });
         }
 
         self.setActiveCanvasTool('None');

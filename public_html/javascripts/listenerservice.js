@@ -149,7 +149,9 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
             var possibleGroup = groupAndObject.group;
             var objectToFind = groupAndObject.object;
             if(possibleGroup._objects.length  < 3){
-               FabricService.ungroup(possibleGroup);
+               FabricService.ungroup(possibleGroup, function(object){
+                   self.attachListenersToFabricObject(object);
+               });
             }else {
                 var cloned = objectToFind.clone();
                 possibleGroup._restoreObjectState(cloned);
