@@ -8,7 +8,9 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         {name: 'Rectangle', glyphiconicon: 'glyphicon-unchecked', active: false, fn: canvasToolRect, help:'Add rectangle'},
         {name: 'Arrow', glyphiconicon: 'glyphicon-arrow-right', active: false, fn: canvasToolArrow, help: 'Add arrow'},
         {name: 'Duplicate', glyphiconicon: 'glyphicon-duplicate', active: false, fn: duplicateObject, help: 'Duplicate any object'},
-        {name: 'Group/Ungroup', glyphiconicon: 'glyphicon-magnet', active: false, fn: groupUngroupObjects, help: 'Group or Ungroup objects'}
+        {name: 'Group/Ungroup', glyphiconicon: 'glyphicon-magnet', active: false, fn: groupUngroupObjects, help: 'Group or Ungroup objects'},
+        {name: 'Bring up one layer', glyphiconicon: 'glyphicon-chevron-up', active: false, fn: bringUpOneLayer, help: 'Bring object up one layer'},
+        {name: 'Send down one layer', glyphiconicon: 'glyphicon-chevron-down', active: false, fn: sendDownOneLayer, help: 'Send object down one layer'},
     ];
 
     this.start = function () {
@@ -45,6 +47,20 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
         }
 
         self.setActiveCanvasTool('None');
+    }
+
+    function bringUpOneLayer(){
+        var activeObject = FabricService.getActiveObjectOrGroup();
+        if(activeObject) {
+            FabricService.canvas().bringForward(activeObject);
+        }
+    }
+
+    function sendDownOneLayer(){
+        var activeObject = FabricService.getActiveObjectOrGroup();
+        if(activeObject){
+            FabricService.canvas().sendBackwards(activeObject);
+        }
     }
 
     function duplicateObject(){

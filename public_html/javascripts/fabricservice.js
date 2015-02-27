@@ -130,6 +130,19 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     this.removeMouseDown = function (fn) {
         canvas.off('mouse:down');
     };
+    this.getActiveObjectOrGroup = function(){
+        var singleObject = self.canvas().getActiveObject();
+        var singleGroup = self.canvas().getActiveGroup();
+        if(singleObject){
+            return singleObject;
+        }else if(singleGroup){
+            return singleGroup;
+        }else {
+            return null;
+        }
+
+
+    }
     this.removeActiveObject = function(){
         var activeObject = self.canvas().getActiveObject();
         var objectId = activeObject.objectId;
