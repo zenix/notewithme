@@ -48,7 +48,7 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
 
         self.setActiveCanvasTool('None');
     }
-
+    //TODO: send over wire
     function bringUpOneLayer(){
         var activeObject = FabricService.getActiveObjectOrGroup();
         if(activeObject) {
