@@ -19,3 +19,14 @@
     font-size: medium;
     font-weight: normal;
 }
+
+.normal h4{
+    font-size: x-large;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 140%;
+    letter-spacing: 0.0250em;
+    text-align: justify;
+}
