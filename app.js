@@ -91,6 +91,8 @@ io.on('connection', function (socket) {
     addListener('scaling');
     addListener('rotating');
     addListener('moving');
+    addListener('sendDownOneLayer');
+    addListener('bringUpOneLayer');
 
 
     function addListener(name) {

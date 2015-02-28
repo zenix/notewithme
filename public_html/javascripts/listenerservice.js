@@ -13,6 +13,8 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         SocketIoService.receive().addObject(addObject);
         SocketIoService.receive().removeObject(removeObject);
         SocketIoService.receive().reconnect(UserService.user());
+        SocketIoService.receive().bringUpOneLayer(bringUpOneLayer);
+        SocketIoService.receive().sendDownOneLayer(sendDownOneLayer);
 
     };
 
@@ -194,6 +196,14 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     function removeObject(message) {
         FabricService.removeObject(message.objectId);
         FabricService.canvas().renderAll();
+    }
+
+    function bringUpOneLayer(message){
+        FabricService.bringUpOneLayerByObjectId(message.objectId);
+    }
+
+    function sendDownOneLayer(message){
+        FabricService.sendDownActiveObjectGroupOneLayer(message.objectId);
     }
 
 }]);

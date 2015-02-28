@@ -130,6 +130,49 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
     this.removeMouseDown = function (fn) {
         canvas.off('mouse:down');
     };
+    this.getActiveObjectOrGroup = function(){
+        var singleObject = self.canvas().getActiveObject();
+        var singleGroup = self.canvas().getActiveGroup();
+        if(singleObject){
+            return singleObject;
+        }else if(singleGroup){
+            return singleGroup;
+        }else {
+            return null;
+        }
+    }
+    this.bringActiveObjectGroupUpOneLayer = function(){
+        var activeObject = self.getActiveObjectOrGroup();
+        if(activeObject) {
+            self.canvas().bringForward(activeObject);
+            return activeObject.objectId;
+        }
+        return "";
+    };
+
+    this.sendDownActiveObjectGroupOneLayer = function(){
+        var activeObject = self.getActiveObjectOrGroup();
+        if(activeObject){
+            self.canvas().sendBackwards(activeObject);
+            return activeObject.objectId;
+        }
+        return "";
+    };
+
+    this.bringUpOneLayerByObjectId = function(objectId){
+        var activeObject = self.findObjectFromCanvasWith(objectId);
+        if(activeObject) {
+            self.canvas().bringForward(activeObject);
+        }
+    };
+
+    this.sendDownOneLayerByObjectId = function(objectId){
+        var activeObject = self.findObjectFromCanvasWith(objectId);
+        if(activeObject){
+            self.canvas().sendBackwards(activeObject);
+        }
+    };
+
     this.removeActiveObject = function(){
         var activeObject = self.canvas().getActiveObject();
         var objectId = activeObject.objectId;
