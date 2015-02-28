@@ -203,7 +203,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
     }
 
     function sendDownOneLayer(message){
-        FabricService.sendDownActiveObjectGroupOneLayer(message.objectId);
+        FabricService.sendDownOneLayerByObjectId(message.objectId);
     }
 
 }]);
