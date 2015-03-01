@@ -1,8 +1,6 @@
 'use strict';
-var nwmApplication = angular.module('notewithme', ['ngRoute','djds4rce.angular-socialshare','ng-contentful', 'hc.marked']);
-nwmApplication.run(['$FB', function($FB){
-    $FB.init('1777278692496422');
-}]);
+var nwmApplication = angular.module('notewithme', ['ngRoute','ng-contentful', 'hc.marked']);
+
 nwmApplication.config(['$routeProvider', '$compileProvider','contentfulClientProvider','markedProvider', function ($routeProvider, $compileProvider,contentfulClientProvider, markedProvider) {
     markedProvider.setOptions({gfm: true})
 
