@@ -114,6 +114,7 @@ app.use(express.static(__dirname + '/public_html'));
 app.use("*", function (req, res) {
     res.sendFile(__dirname + '/public_html/index.html');
 });
+app.use(require('prerender-node').set('prerenderToken', 'I6kVtw0BTp2F86SJgxsP'));
 // TODO: error handlers
 var debug = require('debug')('notewithme');
 //var app = require('../app');
