@@ -4,8 +4,10 @@ nwmApplication.directive('faq', ['ContentTypeList','contentfulClient',function (
         scope: {
             limit: '='
         },
-        link:function($scope){
-
+        link:function($scope, element, attrs){
+            if($scope.limit == 0){
+               element.find('.readmore').remove();
+            }
         },
         controller: function ($scope) {
             var query = {
