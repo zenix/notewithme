@@ -1,4 +1,4 @@
-nwmApplication.directive('header', [function () {
+nwmApplication.directive('footer', [function () {
     return {
         restrict: 'E',
         scope: {
@@ -8,6 +8,6 @@ nwmApplication.directive('header', [function () {
         },
         controller: function ($scope) {
         },
-        templateUrl: 'directives/header.html'
+        templateUrl: 'directives/footer.html'
     }
 }]);
