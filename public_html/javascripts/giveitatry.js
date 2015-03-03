@@ -1,4 +1,4 @@
-nwmApplication.directive('header', [function () {
+nwmApplication.directive('giveitatry', [function () {
     return {
         restrict: 'E',
         scope: {
@@ -7,6 +7,6 @@ nwmApplication.directive('header', [function () {
         },
         controller: function ($scope) {
         },
-        templateUrl: 'directives/header.html'
+        templateUrl: 'directives/giveitatry.html'
     }
 }]);
