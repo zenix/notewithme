@@ -8,6 +8,9 @@ nwmApplication.directive('news', ['ContentTypeList','contentfulClient',function 
             if($scope.limit == 0){
                 element.find('.readmore').remove();
             }
+            $scope.isLastElement = function(last){
+                return last && $scope.limit == 0 ? 'hide': '';
+            }
 
         },
         controller: function ($scope) {
