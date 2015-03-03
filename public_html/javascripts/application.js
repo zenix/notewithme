@@ -18,6 +18,14 @@ nwmApplication.config(['$routeProvider', '$compileProvider','contentfulClientPro
             templateUrl: 'partials/main.html',
             controller: 'mainController'
         }).
+        when('/news', {
+            templateUrl: 'partials/news.html',
+            controller: 'newsController'
+        }).
+        when('/faq', {
+            templateUrl: 'partials/faq.html',
+            controller: 'faqController'
+        }).
         otherwise({
             redirectTo: '/'
         })

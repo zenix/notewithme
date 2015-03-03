@@ -30,3 +30,7 @@ body {
     letter-spacing: 0.0250em;
     text-align: justify;
 }
+
+.hide {
+    display:none;
+}
