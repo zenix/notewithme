@@ -4,7 +4,7 @@ nwmApplication.directive('news', ['ContentTypeList','contentfulClient',function 
         scope: {
             limit: '='
         },
-        link:function($scope, element, attrs){
+        link:function($scope, element){
             if($scope.limit == 0){
                 element.find('.readmore').remove();
             }

@@ -2,9 +2,10 @@ nwmApplication.directive('navbar', [function () {
     return {
         restrict: 'E',
         scope: {
-            limit: '='
+            linkclass: '@'
         },
-        link:function($scope){
+        link:function($scope,element){
+            element.find('.' + $scope.linkclass).addClass('active');
         },
         controller: function ($scope) {
         },
