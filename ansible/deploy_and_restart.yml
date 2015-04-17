@@ -1,0 +1,11 @@
+---
+- hosts: jt
+  sudo: yes
+  sudo_user: www-data
+  tasks:
+    - name: checkout latest code
+      git:  repo=git@github.com:zenix/notewithme.git
+            dest=/data/www/notewithme.com/notewithme
+    - name: build latest version
+      shell:  ./ci-build.sh >> build.log
+              chdir=/data/www/notewithme.com/notewithme
