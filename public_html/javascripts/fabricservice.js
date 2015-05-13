@@ -206,15 +206,37 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         return group;
     }
     function getAndRemoveObjects(activeGroup, acc) {
+        function isAsyncObject(object) {
+            return fabric.util.getKlass(object.type).async;
+        }
+
+        function removeAndAdd(object, clone){
+            self.removeObject(object.objectId);
+            acc.push(clone);
+        }
+
+        function handleOneObject(object) {
+            if (isAsyncObject(object)) {
+                object.clone(function (clone) {
+                    removeAndAdd(object, clone);
+                });
+            } else {
+                var clone = object.clone();
+                removeAndAdd(object, clone);
+            }
+        }
+
+        function handleGroupObject(object) {
+            object._restoreObjectsState();
+            self.removeObject(object.objectId);
+            getAndRemoveObjects(object, acc);
+        }
+
         _.forEach(activeGroup._objects, function (object) {
             if(object.type === 'group'){
-                object._restoreObjectsState();
-                self.removeObject(object.objectId);
-                getAndRemoveObjects(object,acc);
+                handleGroupObject(object);
             }else {
-                var cloneGroupableObject = object.clone();
-                self.removeObject(object.objectId);
-                acc.push(cloneGroupableObject);
+                handleOneObject(object);
             }
         });
 

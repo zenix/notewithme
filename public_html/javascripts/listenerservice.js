@@ -89,11 +89,26 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
         }
 
         function send(fn){
+            function isAsyncObject(object) {
+               return fabric.util.getKlass(object.type).async;
+            }
+
+            function restoreStateAndSend(clone) {
+                fabricObjectToAttach._restoreObjectState(clone);
+                fn(createMessage(clone));
+            }
+
             if(fabricObjectToAttach.type === 'group'){
                 _.forEach(fabricObjectToAttach._objects, function(object){
-                    var clone = object.clone();
-                    fabricObjectToAttach._restoreObjectState(clone);
-                    fn(createMessage(clone));
+                    if(isAsyncObject(object)){
+                        object.clone(function(clone){
+                            restoreStateAndSend(clone);
+                        });
+                    }else{
+                        var clone = object.clone();
+                        restoreStateAndSend(clone);
+                    }
+
                 });
             }else {
                 fn(createMessage(fabricObjectToAttach));
