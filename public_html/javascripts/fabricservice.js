@@ -195,7 +195,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
             self.canvas().add(object);
         });
         self.canvas().renderAll();
-    }
+    };
 
     this.group = function(activeGroup){
         self.canvas().deactivateAll();
@@ -204,7 +204,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
         self.canvas().add(group);
         self.canvas().renderAll();
         return group;
-    }
+    };
     function getAndRemoveObjects(activeGroup, acc) {
         function isAsyncObject(object) {
             return fabric.util.getKlass(object.type).async;
