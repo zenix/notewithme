@@ -105,8 +105,7 @@ nwmApplication.service('ListenerService', ['$window', 'FabricService', 'SocketIo
                             restoreStateAndSend(clone);
                         });
                     }else{
-                        var clone = object.clone();
-                        restoreStateAndSend(clone);
+                        restoreStateAndSend(object.clone());
                     }
 
                 });

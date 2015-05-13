@@ -221,8 +221,7 @@ nwmApplication.service('FabricService', ['$window', 'Utils', function ($window, 
                     removeAndAdd(object, clone);
                 });
             } else {
-                var clone = object.clone();
-                removeAndAdd(object, clone);
+                removeAndAdd(object, object.clone());
             }
         }
 
