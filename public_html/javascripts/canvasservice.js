@@ -65,7 +65,6 @@ nwmApplication.service('CanvasService', ['$routeParams', '$window', 'SocketIoSer
             var clonedFabricObject = fabric.util.object.clone(fabricObject);
             correctPosition(clonedFabricObject, fabricObject);
             clonedFabricObject.objectId = Utils.guid();
-            ListenerService.removeAllListeners(clonedFabricObject);
             ListenerService.attachListenersToFabricObject(clonedFabricObject);
             FabricService.canvas().add(clonedFabricObject).renderAll();
             sendOverWire(clonedFabricObject);
